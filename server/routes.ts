@@ -53,8 +53,12 @@ export async function registerRoutes(
       const resendKey = process.env.RESEND_API_KEY;
       if (resendKey) {
         try {
-          const adminEmail = process.env.APPLICATION_EMAIL_TO || "admissions@areidacademy.ie";
-          const fromEmail = process.env.APPLICATION_EMAIL_FROM || "noreply@areidacademy.ie";
+          const adminEmail = process.env.APPLICATION_EMAIL_TO || "admissions@andyreidelitesocceracademy.ie";
+
+          // IMPORTANT: Resend verified "send" as a subdomain, so From must be @send...
+          const fromEmail =
+            process.env.APPLICATION_EMAIL_FROM ||
+            "Andy Reid Elite Soccer Academy <no-reply@send.andyreidelitesocceracademy.ie>";
 
           const htmlBody = `
             <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; background: #111316; color: #E2E2E1; padding: 40px; border-radius: 8px;">
@@ -97,7 +101,7 @@ export async function registerRoutes(
                 ].map(([k, v]) => `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; width: 40%; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">${k}</td><td style="padding: 8px; background: #1a1e25; color: #E2E2E1;">${v}</td></tr>`).join("")}
               </table>
 
-              <p style="color: #655955; font-size: 12px; text-align: center; margin-top: 30px;">Submitted via areidacademy.ie on ${new Date().toLocaleString("en-IE")}</p>
+              <p style="color: #655955; font-size: 12px; text-align: center; margin-top: 30px;">Submitted via andyreidelitesocceracademy.ie on ${new Date().toLocaleString("en-IE")}</p>
             </div>
           `;
 
@@ -120,7 +124,7 @@ export async function registerRoutes(
               </div>
 
               <p style="color: #B9B2A5;">If you have any questions, please don't hesitate to get in touch:</p>
-              <p><a href="mailto:admissions@areidacademy.ie" style="color: #9A0A0A;">admissions@areidacademy.ie</a> | <a href="tel:+35301234567" style="color: #9A0A0A;">+353 01 234 5678</a></p>
+              <a href="mailto:admissions@andyreidelitesocceracademy.ie" style="color: #9A0A0A;">admissions@andyreidelitesocceracademy.ie</a>
 
               <p style="color: #655955; font-size: 12px; margin-top: 30px;">Andy Reid Elite Soccer Academy | TU Blanchardstown &amp; Corduff Sports Centre, Dublin 15</p>
             </div>
@@ -128,16 +132,20 @@ export async function registerRoutes(
 
           const resend = new Resend(resendKey);
 
+          const parentEmail = String(body.parentEmail).trim();
+
           await Promise.all([
             resend.emails.send({
               from: fromEmail,
               to: adminEmail,
+              replyTo: parentEmail,
               subject: `New Application: ${body.playerName} — ${body.club}`,
               html: htmlBody,
             }),
             resend.emails.send({
               from: fromEmail,
-              to: body.parentEmail,
+              to: parentEmail,
+              replyTo: adminEmail, // so replies go to admissions@...
               subject: "Application Received — Andy Reid Elite Soccer Academy",
               html: confirmationHtml,
             }),
