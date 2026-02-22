@@ -40,7 +40,7 @@ export default function Nav() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
-          <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+          <Link href="/" className="flex items-center gap-3 flex-shrink-0 pl-[10px] pr-[10px]">
             <div className="w-10 h-10 rounded-full bg-[#9A0A0A] flex items-center justify-center">
               <span className="font-heading text-white text-lg leading-none">AR</span>
             </div>
@@ -99,7 +99,6 @@ export default function Nav() {
           </button>
         </div>
       </div>
-
       {open && (
         <div className="xl:hidden bg-[#111316] border-t border-white/10">
           <div className="px-4 py-4 flex flex-col gap-1">
