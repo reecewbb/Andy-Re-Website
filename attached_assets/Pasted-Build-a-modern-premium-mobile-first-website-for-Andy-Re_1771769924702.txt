@@ -1,0 +1,158 @@
+Build a modern, premium, mobile-first website for “Andy Reid Elite Soccer Academy” promoting a Full-Time Transition Year football + education programme in Ireland. Create a responsive, fast site (desktop + mobile), matching the flyer style: bold red/black/white, strong headings, clean cards, and clear CTAs.
+
+TECH STACK
+- Next.js 14+ (App Router) + TypeScript
+- Tailwind CSS
+- Framer Motion (light animations, optional)
+- React Hook Form + Zod validation
+- API route to handle application submissions (POST /api/apply)
+- Email sending via Resend (preferred) or SendGrid (fallback)
+- Optional Google Sheets backup logging via Google Sheets API (service account)
+- Anti-spam: honeypot + rate limit + basic bot check
+
+DESIGN SYSTEM (match flyer)
+Colors:
+- Primary red: #9A0A0A
+- Charcoal: #111316
+- White: #FFFFFF
+- Light gray: #E2E2E1
+- Mid gray: #B9B2A5
+- Warm gray: #655955
+Typography:
+- Headings: Bebas Neue (or Anton fallback), ALL CAPS
+- Body: Inter
+UI:
+- Large hero banners, red accents, charcoal panels with rounded corners
+- 3 pillar cards styled like flyer (dark cards, white text, red underline)
+- Buttons: primary red, secondary charcoal outline
+- Section spacing generous, scannable bullet lists
+
+CONTENT (use exact meaning from provided draft)
+Pages and routes:
+- / (Home)
+- /programme (Programme Overview + Mission Statement + Why Choose Us + What Sets Us Apart)
+- /curriculum (3 Pillars with bullet lists: Player, Athletic, Education/Personal Growth)
+- /experience (Premier League & International Experience)
+- /outcomes (A Proven Pathway to Elite Football + outcomes stats for Boys and Boys & Girls)
+- /coaches (Andy Reid bio + Denis Hyland bio + “support staff” placeholders)
+- /locations (TU Blanchardstown + Corduff Sports Centre + placeholders for photos/maps)
+- /testimonials (Player + Parent testimonials as provided)
+- /faq (include key FAQs; add a few sensible extras)
+- /apply (multi-step application form)
+- /thank-you (application submitted success)
+- /privacy, /terms, /safeguarding, /medical, /cookies (basic legal pages + placeholders)
+
+GLOBAL NAV
+Links: Home, Programme, Curriculum, Experience, Outcomes, Coaches, Locations, Testimonials, FAQ, Contact (Contact can be section on Home or page /#contact)
+Primary CTA button: APPLY NOW -> /apply
+Optional secondary: REQUEST INFO -> scroll to contact section
+
+HOME PAGE SECTIONS (order)
+1) Hero:
+   - Title: “TRANSITION YEAR: FULL-TIME FOOTBALL & EDUCATION COURSE”
+   - Subheadline: “Train Like a Pro. Develop Like a Pro.”
+   - Quick facts chips: “TU Blanchardstown & Corduff Sports Centre”, “Sept 3 – May 28”, “Applications open Feb 26”, “UEFA Pro & UEFA A coaches”
+   - CTAs: Apply Now + View Programme
+2) Programme Overview summary (short paragraph)
+3) Three Pillars (cards):
+   - Player Development (bullets)
+   - Education & Personal Growth (bullets)
+   - Athletic Development (bullets)
+4) “What sets us apart” card row (proven foundation, elite coaching, pro environment, top-level exposure, complete development)
+5) Premier League & International Experience teaser + CTA
+6) Outcomes stats strip (key numbers) + CTA to /outcomes
+7) Media Gallery section with placeholders for photos + highlight reel videos (use embedded video links)
+8) Testimonials slider (quotes provided)
+9) FAQ preview accordion (4 main FAQs)
+10) Contact section (simple form or mailto links)
+11) Final red banner: “Applications for September 2026 now open”
+
+APPLICATION FORM (/apply)
+Goal: multi-step form that matches site design (like the provided UI example), with Next/Previous buttons, step indicators (1/2/3 etc.), and validation per step.
+
+Form steps (recommended 3 steps):
+Step 1: Player Details
+- Player full name (required)
+- DOB (required, date)
+- Gender (select: Male/Female/Other/Prefer not to say)
+- Current school (required)
+- Current school year (select: 3rd year / TY / 5th / 6th / Other)
+- County (required)
+- Current club (required)
+- Playing position(s) (required; allow multiple or text)
+- Level/league (optional)
+Step 2: Football Profile + Links
+- Highlight video link (required) + help text explaining how to share:
+  “Upload to YouTube/Vimeo or Google Drive. If using Drive: Share -> Anyone with the link can view, or share directly with admissions email.”
+- Optional extra links (max 3): match footage, CV, profile
+- Notes about playing history/achievements (optional)
+Step 3: Parent/Guardian Details + Consent
+- Parent/guardian full name (required)
+- Parent email (required)
+- Parent mobile (required)
+- How did you hear about us? (optional)
+- Message (optional)
+- Consent checkboxes (required):
+  - “I am the parent/guardian and consent to submitting this application.”
+  - “I understand we may contact me about the programme.”
+- Anti-spam:
+  - Honeypot hidden field
+  - Simple rate limiting
+
+On submit:
+- POST to /api/apply
+- Show loading state
+- Redirect to /thank-you
+
+EMAIL DELIVERY
+Send one email to admin (APPLICATION_EMAIL_TO) containing:
+- A clean summary table of all fields
+- All video links clickable
+Send one confirmation email to parent (Parent email):
+- “We received your application” + what happens next + contact info
+
+GOOGLE SHEETS BACKUP (optional but supported)
+If env vars are present, append each submission as a new row:
+- Timestamp
+- Player name
+- Parent name/email/phone
+- School/county/club/position
+- Video link + extra links
+- Notes/message
+If Sheets creds missing, skip silently.
+
+SITE CONTENT TEXT
+Use the programme copy and bullet lists from the provided draft document:
+- Mission statement (people-first, safe, inclusive)
+- Overview/Why choose us/What sets us apart
+- TY programme description
+- Curriculum bullet lists
+- Outcomes stats:
+  Boys: 91 underage internationals; 43 international debuts; 3 senior internationals; 42 LOI first teams; 21 overseas contracts; 21 USA scholarships
+  Boys & Girls: 136 underage internationals; 67 debuts; 4 senior internationals; 78 LOI first teams; 21 overseas contracts; 25 USA scholarships
+- Testimonials:
+  Player: Killian Phillips; Aidomo Emakhu
+  Parent: Lorraine Cailloce; Fran Sheridan
+- Coaches bios: Andy Reid; Denis Hyland
+- Apply info: Locations (TU Blanchardstown & Corduff Sports Centre), Programme dates (Sept 3 – May 28), Applications open Feb 26
+
+MEDIA PLACEHOLDERS
+Create sections for:
+- Training/facilities image gallery (placeholder cards)
+- Highlight reel videos (embedded iframe from YouTube/Vimeo; if link is Drive, show as external link)
+
+SEO
+- Add metadata per page (title + description)
+- Clean slugs as listed above
+- OpenGraph defaults
+
+DELIVERABLES
+- Fully working Next.js project with all pages, components, styling, and the multi-step /apply flow
+- /api/apply endpoint sending emails and optionally logging to Google Sheets
+- README with setup steps and required environment variables:
+  - APPLICATION_EMAIL_TO
+  - APPLICATION_EMAIL_FROM
+  - RESEND_API_KEY (or SENDGRID_API_KEY)
+  - RATE_LIMIT_SECRET (optional)
+  - GOOGLE_SHEETS_ID (optional)
+  - GOOGLE_SERVICE_ACCOUNT_JSON (optional)
