@@ -1,0 +1,32 @@
+Here are some refinements I want to implement. Everything else is good — do not change anything outside these points.
+
+1) Scroll-to-top on route change:
+Right now, when I click a button/link that navigates to a new page, the new page loads at the same scroll position as the previous page. I want every navigation to a new route to start at the top of the page (scroll position 0). Implement a clean, reliable fix that works across the whole site without breaking other scrolling behavior.
+
+2) Use my uploaded images automatically:
+I will attach images to the project. Use them in the appropriate places based on their filenames. Example: an image named “Denis-Hyland-Football-Coach” should be used as Denis Hyland’s profile image. Use similar filename-to-section mapping for Andy Reid, facilities, testimonials/media images, etc. If a matching image is missing, fall back to an existing placeholder without errors.
+
+3) Add an inline playable highlight video (Vimeo embed):
+I want the highlight reel to play directly inside the website (no redirect). Create a “Highlight Reel” / “Media” section (best placement: Home page, near the outcomes/testimonials area) and embed the Vimeo player responsively with a 16:9 aspect ratio, rounded corners, and styling that matches the site design. It must be fully responsive on mobile and desktop and play inline.
+Use this Vimeo embed (convert to valid JSX/React if needed; note referrerPolicy camelCase):
+
+<div style="padding:56.25% 0 0 0;position:relative;">
+  <iframe
+    src="https://player.vimeo.com/video/1167134116?badge=0&autopause=0&player_id=0&app_id=58479"
+    frameborder="0"
+    allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    style="position:absolute;top:0;left:0;width:100%;height:100%;"
+    title="Academy-Highlight-Reel">
+  </iframe>
+</div>
+<script src="https://player.vimeo.com/api/player.js"></script>
+
+If the script tag is not needed, omit it safely. Keep the same behavior (inline play).
+
+4) Coaches page: replace “Support Staff” section with “Education Partner: Litton Lane”
+On the Coaches page, remove the generic support staff placeholders. Replace with a single partner card/section:
+- Title: “Education Partner”
+- Name: “Litton Lane”
+- Description (short): “Litton Lane supports the programme’s education pillar, delivering personal training learning and certification throughout the year.”
+Use the image I attached named “Litton-Lane” as the partner logo/photo.

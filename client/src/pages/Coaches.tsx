@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Award, Shield, Trophy } from "lucide-react";
+import littonLaneImg from "@assets/Litton-Lane_1771776748056.png";
 
 export default function Coaches() {
   return (
@@ -129,32 +130,46 @@ export default function Coaches() {
         </div>
       </section>
 
-      {/* Support Staff */}
+      {/* Education Partner: Litton Lane */}
       <section className="py-20 bg-[#111316]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <div className="w-12 h-1 bg-[#9A0A0A] mx-auto mb-6" />
-            <h2 className="font-heading text-4xl sm:text-5xl text-white uppercase tracking-wide leading-none mb-4">
-              SUPPORT STAFF
+            <div className="inline-block bg-[#9A0A0A]/20 border border-[#9A0A0A]/30 text-[#9A0A0A] text-xs uppercase tracking-widest px-3 py-1.5 rounded-md mb-4 font-medium">
+              Education Partner
+            </div>
+            <h2 className="font-heading text-4xl sm:text-5xl text-white uppercase tracking-wide leading-none">
+              LITTON LANE
             </h2>
-            <p className="text-[#B9B2A5] max-w-xl mx-auto">Our extended team of specialists ensures every player receives comprehensive support across all areas of development.</p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {[
-              { role: "Sports Psychologist", desc: "Mental performance coaching, resilience building, and performance mindset development." },
-              { role: "Strength & Conditioning Coach", desc: "Athletic development, injury prevention, and physical performance optimisation." },
-              { role: "Physiotherapist", desc: "Injury assessment, treatment, and rehabilitation support for all programme participants." },
-              { role: "Education Coordinator", desc: "School liaison, academic support, and Transition Year curriculum management." },
-            ].map((staff, i) => (
-              <div key={i} className="bg-[#1a1e25] border border-white/10 border-dashed rounded-md p-6 text-center">
-                <div className="w-16 h-16 bg-[#1a1e25] border-2 border-dashed border-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-[#655955] text-2xl font-heading">?</span>
+          <div className="max-w-3xl mx-auto">
+            <div className="bg-[#1a1e25] border border-white/10 rounded-md overflow-hidden">
+              <div className="grid sm:grid-cols-2 items-center">
+                <div className="bg-white flex items-center justify-center p-10 min-h-48">
+                  <img
+                    src={littonLaneImg}
+                    alt="Litton Lane Training — Education Partner"
+                    className="w-full max-w-[240px] object-contain"
+                  />
                 </div>
-                <h4 className="font-heading text-lg text-white uppercase tracking-wide mb-2">{staff.role}</h4>
-                <p className="text-[#655955] text-xs leading-relaxed">{staff.desc}</p>
-                <p className="text-[#9A0A0A] text-xs mt-3 font-medium uppercase tracking-wider">Announcement Coming</p>
+                <div className="p-8">
+                  <div className="w-8 h-0.5 bg-[#9A0A0A] mb-4" />
+                  <h3 className="font-heading text-2xl text-white uppercase tracking-wide mb-2">Litton Lane Training</h3>
+                  <p className="text-[#9A0A0A] text-xs uppercase tracking-widest font-semibold mb-4">Training Fitness Professionals Since 1987</p>
+                  <p className="text-[#B9B2A5] text-sm leading-relaxed">
+                    Litton Lane supports the programme's education pillar, delivering personal training learning and certification throughout the year. Their involvement ensures every player graduates with recognised qualifications alongside their football development.
+                  </p>
+                  <a
+                    href="https://littonlane.ie"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[#9A0A0A] text-xs uppercase tracking-wider font-semibold mt-5"
+                  >
+                    Learn More <ChevronRight className="w-3.5 h-3.5" />
+                  </a>
+                </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>

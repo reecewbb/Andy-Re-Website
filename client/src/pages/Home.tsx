@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, CheckCircle, Star, MapPin, Calendar, Users, Trophy, Play, ChevronDown } from "lucide-react";
+import { ChevronRight, CheckCircle, Star, MapPin, Calendar, Users, Trophy, ChevronDown } from "lucide-react";
+import pitchImg from "@assets/Pitch_1771776748056.png";
 import { useState } from "react";
 import {
   Accordion,
@@ -344,34 +345,41 @@ export default function Home() {
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
             {[
-              "https://images.unsplash.com/photo-1571512599285-9ac4e4b1af59?w=500&q=80",
-              "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=500&q=80",
-              "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=500&q=80",
-              "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=500&q=80",
-              "https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=500&q=80",
-              "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=500&q=80",
-              "https://images.unsplash.com/photo-1624454002302-036b25ea7a8a?w=500&q=80",
-              "https://images.unsplash.com/photo-1598257006463-7c64a5a538cc?w=500&q=80",
-            ].map((src, i) => (
+              { src: pitchImg, alt: "Academy training pitch" },
+              { src: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=500&q=80", alt: "Training session" },
+              { src: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=500&q=80", alt: "Football match" },
+              { src: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=500&q=80", alt: "Player training" },
+              { src: "https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=500&q=80", alt: "Team session" },
+              { src: "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=500&q=80", alt: "Stadium" },
+              { src: "https://images.unsplash.com/photo-1624454002302-036b25ea7a8a?w=500&q=80", alt: "Players" },
+              { src: "https://images.unsplash.com/photo-1598257006463-7c64a5a538cc?w=500&q=80", alt: "Game day" },
+            ].map((item, i) => (
               <div key={i} className={`relative bg-[#1a1e25] rounded-md overflow-hidden ${i === 0 ? "col-span-2 row-span-2" : ""}`} style={{ aspectRatio: i === 0 ? "1" : "1" }}>
-                <img src={src} alt={`Training photo ${i + 1}`} className="w-full h-full object-cover" style={{ minHeight: i === 0 ? "300px" : "140px" }} />
+                <img src={item.src} alt={item.alt} className="w-full h-full object-cover" style={{ minHeight: i === 0 ? "300px" : "140px" }} />
                 <div className="absolute inset-0 bg-[#111316]/20 hover:bg-[#111316]/0 transition-colors" />
               </div>
             ))}
           </div>
 
-          {/* Highlight Reel */}
-          <div className="bg-[#1a1e25] border border-white/10 rounded-md p-8 text-center">
-            <div className="w-16 h-16 bg-[#9A0A0A] rounded-full flex items-center justify-center mx-auto mb-4">
-              <Play className="w-7 h-7 text-white ml-1" />
+          {/* Highlight Reel — Vimeo embed */}
+          <div className="bg-[#1a1e25] border border-white/10 rounded-md overflow-hidden">
+            <div className="px-8 pt-8 pb-5">
+              <div className="flex items-center gap-3 mb-1">
+                <div className="w-8 h-0.5 bg-[#9A0A0A]" />
+                <span className="text-[#9A0A0A] text-xs uppercase tracking-widest font-semibold">Highlight Reel</span>
+              </div>
+              <h3 className="font-heading text-3xl text-white uppercase tracking-wide">Academy Highlight Reel 2025</h3>
             </div>
-            <h3 className="font-heading text-3xl text-white uppercase tracking-wide mb-2">Academy Highlight Reel 2025</h3>
-            <p className="text-[#B9B2A5] text-sm mb-6">Watch our players in action — training, matches, and life at the academy.</p>
-            <Button asChild variant="outline" className="border-white/20 text-white bg-white/5 text-xs uppercase tracking-widest">
-              <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer">
-                Watch on YouTube <ChevronRight className="w-3.5 h-3.5 ml-1" />
-              </a>
-            </Button>
+            <div style={{ padding: "56.25% 0 0 0", position: "relative" }}>
+              <iframe
+                src="https://player.vimeo.com/video/1167134116?badge=0&autopause=0&player_id=0&app_id=58479"
+                frameBorder="0"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+                title="Academy-Highlight-Reel"
+              />
+            </div>
           </div>
         </div>
       </section>
