@@ -66,27 +66,27 @@ const setsApart = [
 
 const testimonials = [
   {
-    quote: "The programme gave me the platform to get noticed at the highest level. The coaching staff pushed me every day and believed in me when others didn't.",
+    quote: "When I began working with Denis, my goal was to become a professional footballer. He helped me develop my weaknesses, improve my overall game, and gave me the belief and guidance needed to pursue that ambition. Completing the TY programme was one of the best decisions I made.",
     name: "Killian Phillips",
-    role: "Republic of Ireland International",
+    role: "St Mirren FC / Rep of Ireland Senior International",
     initials: "KP",
   },
   {
-    quote: "Andy and his staff helped shape me into the player and person I am today. The environment they created was unlike anything I had experienced before.",
+    quote: "The TY programme played a huge role in improving my physical performance and preparing me for the demands of the next level. Denis' guidance and high standards pushed me to improve every day, teaching me the consistency and discipline required to perform.",
     name: "Aidomo Emakhu",
-    role: "Professional Footballer",
+    role: "Millwall FC",
     initials: "AE",
   },
   {
-    quote: "As a parent, I couldn't have asked for a better environment for my son. The professionalism, the care, and the results speak for themselves.",
+    quote: "From day one, the TY programme with Denis provided a professional and supportive environment. We saw real improvements in our children's football ability, maturity, and discipline. Both of my boys represented their country and now successfully combine football and education with UCD.",
     name: "Lorraine Cailloce",
-    role: "Parent",
+    role: "Parent — Luca & Killian Cailloce, UCD AFC",
     initials: "LC",
   },
   {
-    quote: "My daughter's confidence on and off the pitch has grown enormously. This programme is the best decision our family ever made for her future.",
+    quote: "Denis's TY programme was one of the best decisions we made for our son. He stepped into a professional and supportive environment built on high standards. We saw tremendous progress in his football ability, along with real growth in his self-belief, discipline, and game awareness.",
     name: "Fran Sheridan",
-    role: "Parent",
+    role: "Parent — Ryan Sheridan, St Patrick's Athletic FC",
     initials: "FS",
   },
 ];

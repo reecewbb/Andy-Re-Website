@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Award, Shield, Trophy } from "lucide-react";
+import { Award, Shield, Trophy, ChevronRight } from "lucide-react";
 import littonLaneImg from "@assets/Litton-Lane_1771776748056.png";
 
 export default function Coaches() {

@@ -4,58 +4,78 @@ import { Star, Quote } from "lucide-react";
 
 const playerTestimonials = [
   {
-    quote: "The programme gave me the platform to get noticed at the highest level. The coaching staff pushed me every day and believed in me when others didn't. Training in such a professional environment every day raised my standards across the board.",
+    quote: "When I began working with Denis, my goal was to become a professional footballer. He helped me develop my weaknesses, improve my overall game, and gave me the belief and guidance needed to pursue that ambition. Completing the TY programme was one of the best decisions I made, and I'm very grateful for the support and standards he provided throughout my journey.",
     name: "Killian Phillips",
-    role: "Republic of Ireland International Midfielder",
-    club: "Crystal Palace FC",
+    role: "Rep of Ireland Senior International Player",
+    club: "St Mirren FC",
     initials: "KP",
+    photo: null,
   },
   {
-    quote: "Andy and his staff helped shape me into the player and person I am today. The environment they created was unlike anything I had experienced before. The attention to detail, the quality of coaching, and the high standards they demanded made me a better player.",
+    quote: "The TY programme played a huge role in improving my physical performance and preparing me for the demands of the next level. Denis' guidance and high standards pushed me to improve every day, teaching me the consistency and discipline required to perform and giving me a strong foundation to progress in my football career.",
     name: "Aidomo Emakhu",
-    role: "Republic of Ireland U21 International",
-    club: "Professional Club Footballer",
+    role: "Professional Footballer",
+    club: "Millwall FC",
     initials: "AE",
+    photo: null,
   },
 ];
 
 const parentTestimonials = [
   {
-    quote: "As a parent, I couldn't have asked for a better environment for my son. The professionalism, the care, and the results speak for themselves. Andy and his team genuinely care about every player as an individual, not just as a footballer. We saw incredible growth in confidence and ability.",
+    quote: "From day one, the TY programme with Denis provided a professional and supportive environment. We saw real improvements in our children's football ability, maturity, and discipline. Both of my boys represented their country and now successfully combine football and education with UCD. The programme genuinely prepares players for both their sporting and academic futures.",
     name: "Lorraine Cailloce",
     role: "Parent",
-    child: "Programme Graduate",
+    child: "Luca & Killian Cailloce — UCD AFC",
     initials: "LC",
+    photo: null,
   },
   {
-    quote: "My daughter's confidence on and off the pitch has grown enormously. This programme is the best decision our family ever made for her future. The coaches are exceptional, the facilities are top class, and the opportunities it opened up were beyond anything we expected.",
+    quote: "Denis's TY programme was one of the best decisions we made for our son. From the very beginning, he stepped into a professional and supportive environment built on high standards. We saw tremendous progress in his football ability, along with real growth in his self-belief, discipline, and game awareness. The programme has been instrumental in preparing him for the next steps in both his football and educational journey.",
     name: "Fran Sheridan",
     role: "Parent",
-    child: "Programme Graduate",
+    child: "Ryan Sheridan — St Patrick's Athletic FC",
     initials: "FS",
+    photo: null,
   },
 ];
 
 function TestimonialCard({ testimonial, type }: { testimonial: any; type: "player" | "parent" }) {
   return (
-    <div className="bg-[#1a1e25] border border-white/10 rounded-md p-8 hover-elevate">
-      <div className="flex gap-1 mb-4">
-        {[...Array(5)].map((_, i) => (
-          <Star key={i} className="w-4 h-4 text-[#9A0A0A] fill-current" />
-        ))}
+    <div className="bg-[#1a1e25] border border-white/10 rounded-md overflow-hidden hover-elevate">
+      {/* Photo area */}
+      <div className="w-full h-48 bg-[#0e1014] border-b border-white/10 flex items-center justify-center relative overflow-hidden">
+        {testimonial.photo ? (
+          <img src={testimonial.photo} alt={testimonial.name} className="w-full h-full object-cover object-top" />
+        ) : (
+          <div className="flex flex-col items-center gap-2 text-center px-4">
+            <div className="w-16 h-16 rounded-full bg-[#1a1e25] border-2 border-dashed border-white/20 flex items-center justify-center mb-1">
+              <span className="font-heading text-[#9A0A0A] text-2xl">{testimonial.initials}</span>
+            </div>
+            <span className="text-[#655955] text-xs uppercase tracking-widest">Photo coming soon</span>
+          </div>
+        )}
       </div>
-      <Quote className="w-8 h-8 text-[#9A0A0A]/30 mb-4" />
-      <blockquote className="text-[#E2E2E1] leading-relaxed text-sm sm:text-base mb-8 italic">
-        "{testimonial.quote}"
-      </blockquote>
-      <div className="flex items-center gap-4 border-t border-white/10 pt-6">
-        <div className="w-12 h-12 bg-[#9A0A0A] rounded-full flex items-center justify-center flex-shrink-0">
-          <span className="font-heading text-white text-lg">{testimonial.initials}</span>
+
+      <div className="p-8">
+        <div className="flex gap-1 mb-4">
+          {[...Array(5)].map((_, i) => (
+            <Star key={i} className="w-4 h-4 text-[#9A0A0A] fill-current" />
+          ))}
         </div>
-        <div>
-          <div className="text-white font-bold">{testimonial.name}</div>
-          <div className="text-[#9A0A0A] text-xs uppercase tracking-wider font-medium">{testimonial.role}</div>
-          <div className="text-[#655955] text-xs">{type === "player" ? testimonial.club : testimonial.child}</div>
+        <Quote className="w-8 h-8 text-[#9A0A0A]/30 mb-4" />
+        <blockquote className="text-[#E2E2E1] leading-relaxed text-sm sm:text-base mb-8 italic">
+          "{testimonial.quote}"
+        </blockquote>
+        <div className="flex items-center gap-4 border-t border-white/10 pt-6">
+          <div className="w-12 h-12 bg-[#9A0A0A] rounded-full flex items-center justify-center flex-shrink-0">
+            <span className="font-heading text-white text-lg">{testimonial.initials}</span>
+          </div>
+          <div>
+            <div className="text-white font-bold">{testimonial.name}</div>
+            <div className="text-[#9A0A0A] text-xs uppercase tracking-wider font-medium">{testimonial.role}</div>
+            <div className="text-[#655955] text-xs">{type === "player" ? testimonial.club : testimonial.child}</div>
+          </div>
         </div>
       </div>
     </div>
