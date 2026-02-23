@@ -1,0 +1,45 @@
+Replit AI prompt (copy/paste)
+
+Goal: Fix Resend email sending in production on Render. Emails currently don’t send and nothing appears in Resend dashboard. The endpoint returns 200 OK, so the request is reaching the server, but the email send likely fails silently.
+
+Context:
+	•	Backend is Express in server/routes.ts with a POST /api/apply.
+	•	Resend API key is provided at runtime via env var RESEND_API_KEY.
+	•	Admin recipient is env var APPLICATION_EMAIL_TO (fallback: admissions@andyreidelitesocceracademy.ie).
+	•	Sender should be env var APPLICATION_EMAIL_FROM.
+	•	The domain andyreidelitesocceracademy.ie is verified on Resend. Resend shows some DNS records with a send subdomain (SPF/MX feedback) but From email must use a verified sending domain (likely the root domain).
+
+Tasks:
+	1.	Fix Resend send logic to never fail silently.
+The Resend SDK may return { data, error } instead of throwing. Update code to detect error and log it. If email fails, log the error clearly to console (Render logs) with enough context.
+	2.	Validate and normalize input emails.
+	•	Trim parentEmail, reject invalid emails with 400 (basic regex ok).
+	•	Ensure replyTo uses the trimmed parent email.
+	•	Ensure to and from are valid.
+	3.	Fix from address handling.
+	•	Default APPLICATION_EMAIL_FROM should be:
+Andy Reid Elite Soccer Academy <no-reply@andyreidelitesocceracademy.ie>
+	•	Do NOT default to no-reply@send.andyreidelitesocceracademy.ie unless the sending domain send.andyreidelitesocceracademy.ie is explicitly verified for From usage.
+	•	Add a guard: if from domain doesn’t match a configured allowed domain, log a warning and fall back to the root domain.
+	4.	Add explicit logging around email sending.
+Log:
+	•	“Attempting to send admin email…”
+	•	“Attempting to send confirmation email…”
+	•	success message including returned message ID from Resend
+	•	failure message including error object returned by Resend
+	5.	Add a minimal health-check route for email configuration (optional but recommended).
+Create GET /api/email-health that returns which env vars are present (booleans only, never print secrets), and what APPLICATION_EMAIL_FROM and APPLICATION_EMAIL_TO resolve to. This helps verify Render env is loaded.
+	6.	Keep existing rate limiting + honeypot logic.
+Don’t remove those.
+	7.	Do NOT leak secrets in logs, responses, or frontend.
+	8.	After changes, update README (or a DEPLOY.md) with the exact env vars needed on Render:
+	•	RESEND_API_KEY
+	•	APPLICATION_EMAIL_TO
+	•	APPLICATION_EMAIL_FROM
+plus a note that favicon caching is normal and needs hard refresh or querystring bump.
+
+Deliverable:
+Modify the repo so /api/apply reliably sends:
+	•	one email to admin
+	•	one confirmation email to parent
+and prints clear logs if Resend rejects the request.
