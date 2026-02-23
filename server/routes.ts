@@ -1,6 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { Resend } from "resend";
+import { appendApplicationRow } from "./googleSheets";
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
@@ -104,6 +105,38 @@ export async function registerRoutes(
       console.log(`Parent: ${body.parentName} | Email: ${parentEmail} | Phone: ${body.parentPhone}`);
       console.log(`Video: ${body.highlightVideo}`);
       console.log("================================");
+
+      const submittedAt = new Date().toLocaleString("en-IE");
+
+      try {
+        await appendApplicationRow({
+          submittedAt,
+          playerName: body.playerName,
+          dob: body.dob,
+          gender: body.gender,
+          school: body.school,
+          schoolYear: body.schoolYear,
+          county: body.county,
+          club: body.club,
+          position: body.position,
+          level: body.level,
+          highlightVideo: body.highlightVideo,
+          extraLink1: body.extraLink1,
+          extraLink2: body.extraLink2,
+          extraLink3: body.extraLink3,
+          notes: body.notes,
+          parentName: body.parentName,
+          parentEmail: parentEmail,
+          parentPhone: body.parentPhone,
+          hearAboutUs: body.hearAboutUs,
+          message: body.message,
+          ip,
+        });
+        console.log("[sheets] appended application row");
+      } catch (err) {
+        console.error("[sheets] FAILED to append row:", err);
+        // Important: don't block the application if Sheets fails
+      }
 
       const resendKey = process.env.RESEND_API_KEY;
       if (resendKey) {
