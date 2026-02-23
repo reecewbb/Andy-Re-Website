@@ -47,28 +47,28 @@ export async function appendApplicationRow(row: ApplicationRow) {
 
   // MUST match your header order in the sheet:
   const values = [[
-    row.submittedAt,
-    row.playerName,
-    row.dob,
-    row.gender,
-    row.school,
-    row.schoolYear,
-    row.county,
-    row.club,
-    row.position,
-    row.level ?? "",
-    row.highlightVideo,
-    row.extraLink1 ?? "",
-    row.extraLink2 ?? "",
-    row.extraLink3 ?? "",
-    row.notes ?? "",
-    row.parentName,
-    row.parentEmail,
-    row.parentPhone,
-    row.hearAboutUs ?? "",
-    row.message ?? "",
-    row.ip ?? "",
-  ]];
+    row.submittedAt,          // submitted_at
+    row.ip ?? "",             // ip
+    row.playerName,           // playerName
+    row.dob,                  // dob
+    row.gender,               // gender
+    row.school,               // school
+    row.schoolYear,           // schoolYear
+    row.county,               // county
+    row.club,                 // club
+    row.position,             // position
+    row.level ?? "",          // level
+    row.highlightVideo,       // highlightVideo
+    row.extraLink1 ?? "",     // extraLink1
+    row.extraLink2 ?? "",     // extraLink2
+    row.extraLink3 ?? "",     // extraLink3
+    row.notes ?? "",          // notes
+    row.parentName,           // parentName
+    row.parentEmail,          // parentEmail
+    row.parentPhone,          // parentPhone
+    row.hearAboutUs ?? "",    // hearAboutUs
+    row.message ?? "",        // message
+]];
 
   await sheets.spreadsheets.values.append({
     spreadsheetId,
