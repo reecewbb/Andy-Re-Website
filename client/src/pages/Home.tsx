@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, CheckCircle, Star, MapPin, Calendar, Users, Trophy, ChevronDown } from "lucide-react";
+import { ChevronRight, CheckCircle, Star, MapPin, Calendar, Users, ChevronDown } from "lucide-react";
 import pitchImg from "@assets/Pitch_1771776748056.png";
 import { useState } from "react";
 import {
@@ -10,41 +10,36 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-const stats = [
-  { value: "91", label: "Underage Internationals", sub: "Boys programme" },
-  { value: "43", label: "International Debuts", sub: "Boys programme" },
-  { value: "42", label: "LOI First Team Contracts", sub: "Boys programme" },
-  { value: "21", label: "USA Scholarships", sub: "Boys programme" },
-];
-
 const pillars = [
   {
     title: "Player Development",
-    icon: "⚽",
+    icon: "\u26BD",
     color: "from-[#9A0A0A] to-[#7a0808]",
     bullets: [
-      "Technical excellence & tactical intelligence",
-      "Small-sided games & position-specific training",
-      "Video analysis & performance reviews",
-      "Weekly 1-on-1 coaching sessions",
-      "Strength & conditioning integration",
+      "UEFA Pro Licence Coaches",
+      "Individual learning plans",
+      "Tactical sessions - age appropriate curriculum",
+      "Games v Premier League academy opposition",
+      "Premier League specialist coaching",
+      "Sports psychology support",
     ],
   },
   {
     title: "Education & Personal Growth",
-    icon: "📚",
+    icon: "\uD83D\uDCDA",
     color: "from-[#1a1f2e] to-[#111316]",
     bullets: [
-      "Transition Year curriculum support",
-      "Life skills & leadership workshops",
-      "Sports psychology & mental resilience",
-      "Career planning & academic support",
-      "Community service & volunteering",
+      "ITEC Gym Instructor QQI Level 2",
+      "Anatomy, Physiology, Diet & Nutrition",
+      "Business Studies & Special Populations",
+      "First Aid & Circuit Training",
+      "Gym Instruction & Client Screening",
+      "Premier League Guest Speakers",
     ],
   },
   {
     title: "Athletic Development",
-    icon: "💪",
+    icon: "\uD83D\uDCAA",
     color: "from-[#2a1a1a] to-[#111316]",
     bullets: [
       "Strength & conditioning programme",
@@ -52,12 +47,13 @@ const pillars = [
       "Injury prevention & recovery protocols",
       "Nutrition education & hydration guidance",
       "Sports science monitoring",
+      "Continuous testing and monitoring",
     ],
   },
 ];
 
 const setsApart = [
-  { title: "Proven Foundation", desc: "20+ years producing elite players for domestic and international football" },
+  { title: "Proven Foundation", desc: "Our head of football has 20+ years producing elite players for domestic and international football" },
   { title: "Elite Coaching", desc: "Led by UEFA Pro & UEFA A licensed coaches with professional playing experience" },
   { title: "Pro Environment", desc: "Train at TU Blanchardstown & Corduff Sports Centre in professional facilities" },
   { title: "Top-Level Exposure", desc: "Premier League & international club visits, trials and scouting opportunities" },
@@ -80,13 +76,13 @@ const testimonials = [
   {
     quote: "From day one, the TY programme with Denis provided a professional and supportive environment. We saw real improvements in our children's football ability, maturity, and discipline. Both of my boys represented their country and now successfully combine football and education with UCD.",
     name: "Lorraine Cailloce",
-    role: "Parent — Luca & Killian Cailloce, UCD AFC",
+    role: "Parent \u2014 Luca & Killian Cailloce, UCD AFC",
     initials: "LC",
   },
   {
     quote: "Denis's TY programme was one of the best decisions we made for our son. He stepped into a professional and supportive environment built on high standards. We saw tremendous progress in his football ability, along with real growth in his self-belief, discipline, and game awareness.",
     name: "Fran Sheridan",
-    role: "Parent — Ryan Sheridan, St Patrick's Athletic FC",
+    role: "Parent \u2014 Ryan Sheridan, St Patrick's Athletic FC",
     initials: "FS",
   },
 ];
@@ -130,7 +126,7 @@ export default function Home() {
           <div className="max-w-4xl">
             <div className="inline-flex items-center gap-2 bg-[#9A0A0A]/20 border border-[#9A0A0A]/40 rounded-full px-4 py-2 mb-8">
               <div className="w-2 h-2 bg-[#9A0A0A] rounded-full animate-pulse" />
-              <span className="text-[#E2E2E1] text-xs uppercase tracking-widest font-medium">Applications Now Open — Feb 26, 2026</span>
+              <span className="text-[#E2E2E1] text-xs uppercase tracking-widest font-medium">Applications Now Open \u2014 Feb 26, 2026</span>
             </div>
 
             <h1 className="font-heading text-6xl sm:text-7xl lg:text-8xl xl:text-9xl leading-none text-white mb-6 uppercase tracking-wide">
@@ -147,9 +143,8 @@ export default function Home() {
             <div className="flex flex-wrap gap-3 mb-10">
               {[
                 { icon: <MapPin className="w-3.5 h-3.5" />, text: "TU Blanchardstown & Corduff Sports Centre" },
-                { icon: <Calendar className="w-3.5 h-3.5" />, text: "Sept 3 – May 28" },
+                { icon: <Calendar className="w-3.5 h-3.5" />, text: "Sept 3 \u2013 May 28" },
                 { icon: <Users className="w-3.5 h-3.5" />, text: "UEFA Pro & UEFA A Coaches" },
-                { icon: <Trophy className="w-3.5 h-3.5" />, text: "136 Underage Internationals" },
               ].map((chip, i) => (
                 <div key={i} className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 text-xs text-[#E2E2E1] font-medium">
                   {chip.icon}
@@ -188,38 +183,22 @@ export default function Home() {
       {/* PROGRAMME OVERVIEW */}
       <section className="py-24 bg-[#0e1014]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <div className="inline-block bg-[#9A0A0A]/20 border border-[#9A0A0A]/30 text-[#9A0A0A] text-xs uppercase tracking-widest px-3 py-1.5 rounded-md mb-6 font-medium">
-                The Programme
-              </div>
-              <h2 className="font-heading text-5xl sm:text-6xl text-white uppercase tracking-wide leading-none mb-6">
-                AN ELITE PATHWAY<br /><span className="text-[#9A0A0A]">FOR SERIOUS PLAYERS</span>
-              </h2>
-              <p className="text-[#B9B2A5] leading-relaxed mb-6">
-                The Andy Reid Elite Soccer Academy Transition Year Programme is a full-time, people-first football and education experience built for players who are serious about reaching the professional game. We create a safe, inclusive, and high-performance environment where every player is empowered to grow.
-              </p>
-              <p className="text-[#B9B2A5] leading-relaxed mb-8">
-                Based at TU Blanchardstown and Corduff Sports Centre in Dublin, our programme combines elite technical coaching from UEFA-licensed staff with academic support, life skills, and real exposure to professional football environments — including Premier League and international club experiences.
-              </p>
-              <Button asChild className="bg-[#9A0A0A] text-white font-semibold text-xs uppercase tracking-widest">
-                <Link href="/programme">Explore Programme <ChevronRight className="w-4 h-4 ml-1" /></Link>
-              </Button>
+          <div>
+            <div className="inline-block bg-[#9A0A0A]/20 border border-[#9A0A0A]/30 text-[#9A0A0A] text-xs uppercase tracking-widest px-3 py-1.5 rounded-md mb-6 font-medium">
+              The Programme
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { value: "Full-Time", label: "Daily Coaching", desc: "Morning & afternoon sessions" },
-                { value: "UEFA", label: "Licensed Coaches", desc: "Pro & A licence holders" },
-                { value: "TY", label: "Recognised", desc: "Transition Year approved" },
-                { value: "20+", label: "Years Track Record", desc: "Proven player development" },
-              ].map((stat, i) => (
-                <div key={i} className="bg-[#1a1e25] border border-white/10 rounded-md p-6">
-                  <div className="font-heading text-3xl text-[#9A0A0A] mb-1">{stat.value}</div>
-                  <div className="text-white font-semibold text-sm mb-1">{stat.label}</div>
-                  <div className="text-[#655955] text-xs">{stat.desc}</div>
-                </div>
-              ))}
-            </div>
+            <h2 className="font-heading text-5xl sm:text-6xl text-white uppercase tracking-wide leading-none mb-6">
+              AN ELITE PATHWAY<br /><span className="text-[#9A0A0A]">FOR SERIOUS PLAYERS</span>
+            </h2>
+            <p className="text-[#B9B2A5] leading-relaxed mb-6">
+              The Andy Reid Elite Soccer Academy Transition Year Programme is a full-time, people-first football and education experience built for players who are serious about reaching the professional game. We create a safe, inclusive, and high-performance environment where every player is empowered to grow.
+            </p>
+            <p className="text-[#B9B2A5] leading-relaxed mb-8">
+              Based at TU Blanchardstown and Corduff Sports Centre in Dublin, our programme combines elite technical coaching from UEFA Pro Licence coaches with academic support, life skills, and real exposure to professional football environments — including Premier League and international club experiences.
+            </p>
+            <Button asChild className="bg-[#9A0A0A] text-white font-semibold text-xs uppercase tracking-widest">
+              <Link href="/programme">Explore Programme <ChevronRight className="w-4 h-4 ml-1" /></Link>
+            </Button>
           </div>
         </div>
       </section>
@@ -299,9 +278,6 @@ export default function Home() {
           <p className="text-[#B9B2A5] max-w-2xl mx-auto text-lg mb-10">
             Our players gain exclusive access to Premier League academies, international club visits, and professional training environments that money can't buy.
           </p>
-          <Button asChild size="lg" className="bg-[#9A0A0A] text-white font-semibold text-xs uppercase tracking-widest px-8">
-            <Link href="/experience">View Experience <ChevronRight className="w-4 h-4 ml-1" /></Link>
-          </Button>
         </div>
       </section>
 
@@ -312,10 +288,19 @@ export default function Home() {
             <h2 className="font-heading text-5xl sm:text-6xl text-white uppercase tracking-wide leading-none mb-4">
               A PROVEN PATHWAY<br />TO ELITE FOOTBALL
             </h2>
-            <p className="text-white/70 text-sm uppercase tracking-widest">Boys Programme Results</p>
+            <p className="text-white/70 text-sm max-w-3xl mx-auto leading-relaxed">
+              Our programme is built on a long-standing track record of developing players to the highest levels of the game. Under the leadership of original founder and Head Coach Denis Hyland, it has consistently delivered outstanding progression outcomes both nationally and internationally
+            </p>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {stats.map((s, i) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {[
+              { value: "136", label: "Underage International Players", sub: "Boys & Girls Programme" },
+              { value: "67", label: "Players Receiving International Debuts", sub: "Boys & Girls Programme" },
+              { value: "4", label: "Senior International Players", sub: "Boys & Girls Programme" },
+              { value: "78", label: "Players Progressed to First Team LOI Football", sub: "Boys & Girls Programme" },
+              { value: "21", label: "Players Secured Professional Contracts Overseas", sub: "Boys & Girls Programme" },
+              { value: "25", label: "Players Earned USA College Scholarships", sub: "Boys & Girls Programme" },
+            ].map((s, i) => (
               <div key={i} className="text-center bg-white/10 rounded-md p-6 border border-white/20" data-testid={`stat-${s.label.toLowerCase().replace(/ /g, '-')}`}>
                 <div className="font-heading text-6xl sm:text-7xl text-white leading-none mb-2">{s.value}</div>
                 <div className="text-white font-semibold text-sm mb-1">{s.label}</div>
@@ -323,11 +308,9 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <div className="text-center">
-            <Button asChild variant="outline" size="lg" className="border-white/30 text-white bg-white/10 text-xs uppercase tracking-widest">
-              <Link href="/outcomes">View All Outcomes <ChevronRight className="w-4 h-4 ml-1" /></Link>
-            </Button>
-          </div>
+          <p className="text-white/80 text-sm text-center max-w-3xl mx-auto leading-relaxed">
+            Now, under Andy Reid Elite Soccer Academy, the programme is entering an exciting new chapter, building on this proven foundation and ready to take player development and education to the next level.
+          </p>
         </div>
       </section>
 
@@ -361,7 +344,7 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Highlight Reel — Vimeo embed */}
+          {/* Highlight Reel */}
           <div className="bg-[#1a1e25] border border-white/10 rounded-md overflow-hidden">
             <div className="px-8 pt-8 pb-5">
               <div className="flex items-center gap-3 mb-1">
@@ -483,54 +466,22 @@ export default function Home() {
                 Have questions about the programme? We'd love to hear from you. Reach out to our admissions team and we'll get back to you within 24 hours.
               </p>
               <div className="space-y-4">
-                <a href="mailto:admissions@areidacademy.ie" className="flex items-center gap-4 text-[#B9B2A5] hover:text-white transition-colors">
+                <a href="mailto:admissions@andyreidelitesocceracademy.ie" className="flex items-center gap-4 text-[#B9B2A5] hover:text-white transition-colors">
                   <div className="w-10 h-10 bg-[#9A0A0A]/20 border border-[#9A0A0A]/30 rounded-md flex items-center justify-center flex-shrink-0">
                     <span className="text-[#9A0A0A] text-lg">@</span>
                   </div>
-                  <span>admissions@areidacademy.ie</span>
-                </a>
-                <a href="tel:+35301234567" className="flex items-center gap-4 text-[#B9B2A5] hover:text-white transition-colors">
-                  <div className="w-10 h-10 bg-[#9A0A0A]/20 border border-[#9A0A0A]/30 rounded-md flex items-center justify-center flex-shrink-0">
-                    <span className="text-[#9A0A0A] text-sm font-bold">#</span>
-                  </div>
-                  <span>+353 01 234 5678</span>
+                  <span>admissions@andyreidelitesocceracademy.ie</span>
                 </a>
               </div>
             </div>
             <div className="bg-[#1a1e25] border border-white/10 rounded-md p-8">
               <h3 className="font-heading text-2xl text-white uppercase tracking-wide mb-6">Send a Message</h3>
-              <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); }}>
-                <div>
-                  <label className="text-[#B9B2A5] text-xs uppercase tracking-wider mb-2 block">Your Name</label>
-                  <input
-                    type="text"
-                    className="w-full bg-[#111316] border border-white/10 rounded-md px-4 py-3 text-white text-sm focus:border-[#9A0A0A]/60 focus:outline-none transition-colors placeholder:text-[#655955]"
-                    placeholder="John Smith"
-                    data-testid="contact-name"
-                  />
-                </div>
-                <div>
-                  <label className="text-[#B9B2A5] text-xs uppercase tracking-wider mb-2 block">Email Address</label>
-                  <input
-                    type="email"
-                    className="w-full bg-[#111316] border border-white/10 rounded-md px-4 py-3 text-white text-sm focus:border-[#9A0A0A]/60 focus:outline-none transition-colors placeholder:text-[#655955]"
-                    placeholder="john@example.com"
-                    data-testid="contact-email"
-                  />
-                </div>
-                <div>
-                  <label className="text-[#B9B2A5] text-xs uppercase tracking-wider mb-2 block">Message</label>
-                  <textarea
-                    rows={4}
-                    className="w-full bg-[#111316] border border-white/10 rounded-md px-4 py-3 text-white text-sm focus:border-[#9A0A0A]/60 focus:outline-none transition-colors resize-none placeholder:text-[#655955]"
-                    placeholder="Tell us about your player..."
-                    data-testid="contact-message"
-                  />
-                </div>
-                <Button type="submit" className="w-full bg-[#9A0A0A] text-white font-semibold text-xs uppercase tracking-widest" data-testid="contact-submit">
-                  Send Message
-                </Button>
-              </form>
+              <p className="text-[#B9B2A5] text-sm mb-6">
+                Click the button below to send us an email directly.
+              </p>
+              <Button asChild className="w-full bg-[#9A0A0A] text-white font-semibold text-xs uppercase tracking-widest">
+                <a href="mailto:admissions@andyreidelitesocceracademy.ie">Send a Message</a>
+              </Button>
             </div>
           </div>
         </div>

@@ -32,7 +32,7 @@ export default function ThankYou() {
             {[
               { step: "01", title: "Application Review", desc: "Our coaching team will review your application and highlight video within 5-7 working days." },
               { step: "02", title: "Shortlist Notification", desc: "Shortlisted players will be invited to attend a trial session at our facilities in Dublin." },
-              { step: "03", title: "Trial Day", desc: "Attend a trial session where our coaches assess you on and off the pitch." },
+              { step: "03", title: "Assessment Day", desc: "In your trial you will be assessed on your athletic development, football actions and in-game decision making." },
               { step: "04", title: "Final Decision", desc: "Successful applicants will receive a formal offer of a place in the programme." },
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-4">
@@ -49,8 +49,8 @@ export default function ThankYou() {
         <div className="bg-[#111316] border border-[#9A0A0A]/20 rounded-md p-5 mb-10 max-w-lg mx-auto">
           <p className="text-[#B9B2A5] text-sm">
             Questions? Contact our admissions team at{" "}
-            <a href="mailto:admissions@areidacademy.ie" className="text-[#9A0A0A] font-semibold">
-              admissions@areidacademy.ie
+            <a href="mailto:admissions@andyreidelitesocceracademy.ie" className="text-[#9A0A0A] font-semibold">
+              admissions@andyreidelitesocceracademy.ie
             </a>
           </p>
         </div>

@@ -37,11 +37,11 @@ export default function Privacy() {
             </div>
             <div>
               <h2 className="font-heading text-2xl text-white uppercase tracking-wide mb-3">5. Your Rights</h2>
-              <p>Under GDPR, you have the right to access, rectify, erase, restrict processing of, and port your personal data. Contact us at admissions@areidacademy.ie to exercise these rights.</p>
+              <p>Under GDPR, you have the right to access, rectify, erase, restrict processing of, and port your personal data. Contact us at admissions@andyreidelitesocceracademy.ie to exercise these rights.</p>
             </div>
             <div>
               <h2 className="font-heading text-2xl text-white uppercase tracking-wide mb-3">6. Contact</h2>
-              <p>For privacy enquiries: <a href="mailto:admissions@areidacademy.ie" className="text-[#9A0A0A]">admissions@areidacademy.ie</a></p>
+              <p>For privacy enquiries: <a href="mailto:admissions@andyreidelitesocceracademy.ie" className="text-[#9A0A0A]">admissions@andyreidelitesocceracademy.ie</a></p>
             </div>
           </div>
         </div>

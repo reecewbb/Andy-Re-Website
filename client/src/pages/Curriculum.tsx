@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, ChevronRight } from "lucide-react";
+import littonLaneImg from "@assets/Litton-Lane_1771776748056.png";
 
 const pillars = [
   {
@@ -9,16 +10,12 @@ const pillars = [
     subtitle: "Technical & Tactical Excellence",
     desc: "The core of our programme. Every session is designed with purpose to develop technically superior, tactically intelligent footballers who can compete at the highest level.",
     bullets: [
-      "Daily technical training — 1v1, 2v2, positional work",
-      "Tactical sessions — team shape, pressing, transitions",
-      "Small-sided games emphasising decision-making under pressure",
-      "Position-specific coaching and role clarity",
-      "Video analysis — individual and collective performance review",
-      "Weekly feedback sessions with head coach",
-      "Internal and external match programme",
-      "Scout and trial opportunity facilitation",
-      "Mental performance coaching and game intelligence",
-      "Set-piece preparation and execution",
+      "UEFA Pro Licence Coaches",
+      "Individual learning plans",
+      "Tactical sessions - age appropriate curriculum",
+      "Games v Premier League academy opposition",
+      "Premier League specialist coaching",
+      "Sports psychology support",
     ],
   },
   {
@@ -29,31 +26,33 @@ const pillars = [
     bullets: [
       "Strength & conditioning programme tailored to footballers",
       "Speed, agility, quickness (SAQ) training",
-      "Explosive power development — plyometrics & resistance",
+      "Explosive power development \u2014 plyometrics & resistance",
       "Endurance base building and periodisation",
-      "Injury prevention protocols — mobility, flexibility, activation",
-      "Recovery sessions — ice bath, active recovery, sleep hygiene",
+      "Injury prevention protocols \u2014 mobility, flexibility, activation",
+      "Recovery sessions \u2014 ice bath, active recovery, sleep hygiene",
       "Nutrition education and hydration strategies",
       "Body composition monitoring and physical testing",
       "Sports science data collection and application",
-      "Collaboration with physiotherapists as required",
+      "Continuous testing and monitoring",
     ],
   },
   {
     number: "03",
     title: "Education & Personal Growth",
     subtitle: "Academic Achievement & Life Skills",
-    desc: "We believe every player deserves the best possible future — in football and beyond. Our education and personal development strand ensures players leave our programme as rounded, confident young people.",
+    desc: "We believe every player deserves the best possible future \u2014 in football and beyond. Our education and personal development strand ensures players leave our programme as rounded, confident young people.",
     bullets: [
-      "Transition Year curriculum support and school liaison",
-      "Life skills workshops — communication, leadership, teamwork",
-      "Sports psychology — resilience, focus, pressure management",
-      "Career planning — football and non-football pathways",
+      "ITEC Gym Instructor QQI Level 2",
+      "Anatomy, Physiology, Diet & Nutrition",
+      "Business Studies & Special Populations",
+      "First Aid & Circuit Training",
+      "Gym Instruction & Client Screening",
+      "Premier League Guest Speakers",
+      "Life skills workshops \u2014 communication, leadership, teamwork",
+      "Sports psychology \u2014 resilience, focus, pressure management",
+      "Career planning \u2014 football and non-football pathways",
       "University and scholarship application guidance",
       "Media training and personal brand awareness",
-      "Community service and volunteer experience",
-      "Financial literacy and independent living skills",
-      "Guest speakers — professional players, coaches, scouts",
       "Graduation and certificate of completion",
     ],
   },
@@ -113,40 +112,46 @@ export default function Curriculum() {
         </section>
       ))}
 
-      {/* Weekly Schedule Overview */}
+      {/* Education Partner: Litton Lane */}
       <section className="py-20 bg-[#111316]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <div className="w-12 h-1 bg-[#9A0A0A] mx-auto mb-6" />
-            <h2 className="font-heading text-4xl sm:text-5xl text-white uppercase tracking-wide leading-none mb-4">
-              A TYPICAL WEEK
+            <div className="inline-block bg-[#9A0A0A]/20 border border-[#9A0A0A]/30 text-[#9A0A0A] text-xs uppercase tracking-widest px-3 py-1.5 rounded-md mb-4 font-medium">
+              Education Partner
+            </div>
+            <h2 className="font-heading text-4xl sm:text-5xl text-white uppercase tracking-wide leading-none">
+              LITTON LANE
             </h2>
-            <p className="text-[#B9B2A5] max-w-xl mx-auto">A structured daily routine designed to maximise development across all three pillars.</p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-3">
-            {[
-              { day: "MON", am: "Technical Training", pm: "Athletic Development" },
-              { day: "TUE", am: "Tactical Session", pm: "Education & Life Skills" },
-              { day: "WED", am: "Match Preparation", pm: "Video Analysis" },
-              { day: "THU", am: "S&C / Athletic", pm: "Technical Training" },
-              { day: "FRI", am: "Match Day", pm: "Review & Recovery" },
-            ].map((day, i) => (
-              <div key={i} className="bg-[#1a1e25] border border-white/10 rounded-md overflow-hidden">
-                <div className="bg-[#9A0A0A] py-3 text-center">
-                  <span className="font-heading text-white text-2xl tracking-wider">{day.day}</span>
+          <div className="max-w-3xl mx-auto">
+            <div className="bg-[#1a1e25] border border-white/10 rounded-md overflow-hidden">
+              <div className="grid sm:grid-cols-2 items-center">
+                <div className="bg-white flex items-center justify-center p-10 min-h-48">
+                  <img
+                    src={littonLaneImg}
+                    alt="Litton Lane Training \u2014 Education Partner"
+                    className="w-full max-w-[240px] object-contain"
+                  />
                 </div>
-                <div className="p-4 space-y-3">
-                  <div>
-                    <p className="text-[#655955] text-xs uppercase tracking-wider mb-1">AM</p>
-                    <p className="text-[#E2E2E1] text-xs font-medium">{day.am}</p>
-                  </div>
-                  <div className="border-t border-white/10 pt-3">
-                    <p className="text-[#655955] text-xs uppercase tracking-wider mb-1">PM</p>
-                    <p className="text-[#E2E2E1] text-xs font-medium">{day.pm}</p>
-                  </div>
+                <div className="p-8">
+                  <div className="w-8 h-0.5 bg-[#9A0A0A] mb-4" />
+                  <h3 className="font-heading text-2xl text-white uppercase tracking-wide mb-2">Litton Lane Training</h3>
+                  <p className="text-[#9A0A0A] text-xs uppercase tracking-widest font-semibold mb-4">Training Fitness Professionals Since 1987</p>
+                  <p className="text-[#B9B2A5] text-sm leading-relaxed">
+                    Litton Lane supports the programme's education pillar, delivering personal training learning and certification throughout the year. Their involvement ensures every player graduates with recognised qualifications alongside their football development.
+                  </p>
+                  <a
+                    href="https://littonlane.ie"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[#9A0A0A] text-xs uppercase tracking-wider font-semibold mt-5"
+                  >
+                    Learn More <ChevronRight className="w-3.5 h-3.5" />
+                  </a>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>

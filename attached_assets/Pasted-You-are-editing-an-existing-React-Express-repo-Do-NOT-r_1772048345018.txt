@@ -1,0 +1,168 @@
+You are editing an existing React + Express repo. Do NOT redesign, refactor, or change anything except the exact items below. Keep layout, styling, spacing, and components the same unless a specific change requires moving/removing something. Ensure the site still builds and all routes/links still work after removing pages.
+
+0) Global rules
+	•	Only implement the changes listed below.
+	•	Do not change any text/copy except where specified.
+	•	Do not change branding/colors/typography/components unless required to remove sections/pages.
+	•	After removing pages, remove all related links in nav/footer and any internal references so no broken routes exist.
+	•	Replace any remaining references to the old admissions email.
+
+⸻
+
+1) Home page changes
+	1.	Remove the bullet point “136 internationals” that appears under the main title.
+	2.	Remove the 4 boxes on the right of the “An elite pathway for serious players” text.
+	3.	In the “An elite pathway for serious players” text section, change wording to say “UEFA Pro Licence coaches” (instead of current wording there).
+	4.	In “What sets us apart” section:
+	•	Update the “Proven Foundation” card body text to:
+“Our head of football has 20+ years producing elite players for domestic and international football”
+	5.	In the “A proven pathway to elite football” section:
+	•	Replace the current “Boys programme results” intro text with:
+“Our programme is built on a long-standing track record of developing players to the highest levels of the game. Under the leadership of original founder and Head Coach Denis Hyland, it has consistently delivered outstanding progression outcomes both nationally and internationally”
+	•	Replace the 4 cards in that section so they all use the heading:
+“Boys & Girls Programme”
+	•	Replace the stats content in those cards with exactly:
+	•	136 Underage International Players
+	•	67 Players Receiving International Debuts
+	•	4 Senior International Players
+	•	78 Players Progressed to First Team LOI Football
+	•	21 Players Secured Professional Contracts Overseas
+	•	25 Players Earned USA College Scholarships
+	•	Underneath the cards add this text paragraph:
+“Now, under Andy Reid Elite Soccer Academy, the programme is entering an exciting new chapter, building on this proven foundation and ready to take player development and education to the next level.”
+
+⸻
+
+2) Three Pillars updates (Home page + Curriculum page must match)
+
+Update the three pillars on both the Home page and the Curriculum page so they are identical.
+
+Player Development pillar
+
+Remove these bullet points (if present):
+	•	Internal and external match programs
+	•	Take weekly feedback sessions
+	•	Tactical sessions
+	•	Small-sided games emphasising decision-making under pressure
+	•	Set-piece preparation and execution
+	•	Mental performance coaching and game intelligence
+
+Replace with these bullet points in this exact order:
+	1.	UEFA Pro Licence Coaches
+	2.	Individual learning plans
+	3.	Tactical sessions - age appropriate curriculum
+	4.	Games v Premier League academy opposition
+	5.	Premier League specialist coaching
+	6.	Sports psychology support
+
+Athletic Development pillar
+	•	Add bullet: Continuous testing and monitoring
+	•	Remove bullet: Collaboration with physiotherapists as required
+
+Education & Personal Growth pillar
+
+Remove these bullet points (if present):
+	•	Transition year curriculum support and school liaison
+	•	Community service and volunteer experience
+	•	Financial literacy and independent living skills
+	•	scouts
+
+Replace with these bullet points:
+	•	ITEC Gym Instructor QQI Level 2
+	•	Anatomy, Physiology, Diet & Nutrition
+	•	Business Studies & Special Populations
+	•	First Aid & Circuit Training
+	•	Gym Instruction & Client Screening
+	•	Premier League Guest Speakers
+
+⸻
+
+3) Curriculum page changes
+	1.	Remove the entire “A Typical Week” section.
+	2.	Move the Litton Lane section currently at the bottom of the Coaches page to the bottom of the Curriculum page, placed where “A Typical Week” was (same styling/structure as it currently has on Coaches).
+
+⸻
+
+4) Coaches page changes
+	1.	Replace Andy Reid text with exactly:
+“Andy Reid is a former Republic of Ireland international midfielder and current academy coach at Premier League club Nottingham Forest. He enjoyed a successful professional career playing over 400 senior games, including spells with Nottingham Forest, Tottenham Hotspur, Charlton Athletic, Sunderland, and Blackpool. Andy earned 29 caps for Ireland, representing his country at senior international level for more than a decade. Since retiring, he has moved into elite coaching, helping to develop the next generation of professional players.”
+	2.	Replace Denis Hyland text with exactly:
+“Denis Hyland is a UEFA Pro Licensed coach with over 20 years’ experience developing elite youth and international players. As founder of the TY programme, he has guided numerous players to professional contracts and senior international football. For the past 15 years, he has also served as a national team coach with Ireland’s U16, U18, and U21 squads.”
+	3.	Remove Litton Lane section from Coaches page (since it’s moved to Curriculum).
+
+⸻
+
+5) Remove pages entirely (and links/routes)
+	1.	Remove the Experience page completely:
+	•	delete route/page component
+	•	remove from nav/footer
+	•	remove any references/buttons pointing to it
+	2.	Remove the Outcomes page completely in the same way.
+
+Also remove these legal pages entirely:
+	•	Safeguarding Policy
+	•	Medical Policy
+And remove all links to them.
+
+(Keep other legal pages like Privacy / Terms / Cookies unless they were explicitly listed to remove.)
+
+⸻
+
+6) Locations page changes
+	1.	Change page title “World-Class Facilities” → “Academy Facilities”
+	2.	In Corduff Sports Centre section, change:
+	•	“Premium grass and 3G training pitches” → “New 4G state-of-the-art training pitch”
+
+⸻
+
+7) FAQ page changes
+
+About the programme section
+	1.	In “Is the programme open to girls as well as boys?” answer text becomes:
+“Yes. The Andy Reid Elite Soccer Academy is open to both male and female players.”
+	2.	Remove the entire card: “How is the programme structured during the week?”
+
+Applications & Admissions section
+	1.	“What do I need to apply?” answer becomes:
+“You’ll need to complete our online application form including personal, football and school details.”
+	2.	“Is there a trial or interview process?” answer becomes:
+“Following review of your application, we may invite you to attend a trial session at our facilities. We assess players holistically — technically, physically, mentally, and academically — before making final decisions.”
+
+Logistics & Practicalities section
+	1.	“Where does the programme take place?” answer becomes:
+“The programme is based at two venues in Dublin 15: TU Blanchardstown and Corduff Sports Centre. Both venues are within minutes of each other.”
+	2.	Remove the card: “Do I need to attend school as well?”
+	3.	“How much does the programme cost?” answer becomes:
+“Programme fees will be communicated during the application process. We are committed to making the programme as accessible as possible and offer payment plans in cases of genuine financial need.”
+	4.	Remove the card: “What equipment and kit do I need?”
+
+Remove entire FAQ section
+	•	Remove the whole “OUTCOMES & OPPORTUNITIES” section from the FAQ page.
+
+⸻
+
+8) Global site-wide UI / contact changes
+	1.	Remove the Request Info button from the entire website (nav/hero/etc.). Keep only the “Send a message” card at the bottom of pages that opens the user’s email app.
+	2.	Remove the phone number contact detail everywhere it appears on the site.
+	3.	Remove all social media links/icons/bubbles (Instagram/YouTube/Facebook) everywhere.
+	4.	Replace email across the whole website:
+	•	change admissions@areidacademy.ie → admissions@andyreidelitesocceracademy.ie
+
+⸻
+
+9) Application form changes (Apply flow)
+	1.	In the “Player Details” section remove the field asking for CURRENT SCHOOL YEAR (it’s implied the applicant is in 3rd year).
+	2.	Remove the entire second step/section called “Football Profile” so the application becomes two steps total (Player Details + Parent/Guardian/Other remaining step).
+	•	Ensure required fields still exist and the backend /api/apply still receives required data (playerName, dob, gender, school, county, club, position, highlightVideo, parentName, parentEmail, parentPhone, etc.)
+	3.	On the “Thank you for applying” page:
+	•	Change “Trial Day” → “Assessment Day”
+	•	Change the text underneath it to:
+“In your trial you will be assessed on your athletic development, football actions and in-game decision making.”
+
+⸻
+
+10) Final checks
+	•	Ensure the site compiles, runs, and deploys cleanly.
+	•	Ensure no broken links/routes after removing pages.
+	•	Ensure email and Google Sheets application submission still works.
+	•	Confirm no other changes were made beyond the list above.

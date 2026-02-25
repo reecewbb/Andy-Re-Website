@@ -3,6 +3,21 @@ import { createServer, type Server } from "http";
 import { Resend } from "resend";
 import { appendApplicationRow } from "./googleSheets";
 
+function escapeHtml(str: unknown): string {
+  return String(str ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function safeUrl(str: unknown): string {
+  const s = String(str ?? "").trim();
+  if (/^https?:\/\//i.test(s)) return escapeHtml(s);
+  return "#";
+}
+
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
 function rateLimit(ip: string, limit = 5, windowMs = 15 * 60 * 1000): boolean {
@@ -85,7 +100,7 @@ export async function registerRoutes(
       }
 
       const required = [
-        "playerName", "dob", "gender", "school", "schoolYear",
+        "playerName", "dob", "gender", "school",
         "county", "club", "position", "highlightVideo",
         "parentName", "parentEmail", "parentPhone",
       ];
@@ -95,7 +110,7 @@ export async function registerRoutes(
         }
       }
 
-      const parentEmail = String(body.parentEmail).trim();
+      const parentEmail = String(body.parentEmail).trim().replace(/[\r\n]/g, "");
       if (!EMAIL_REGEX.test(parentEmail)) {
         return res.status(400).json({ error: "Invalid parent email address." });
       }
@@ -115,7 +130,6 @@ export async function registerRoutes(
           dob: body.dob,
           gender: body.gender,
           school: body.school,
-          schoolYear: body.schoolYear,
           county: body.county,
           club: body.club,
           position: body.position,
@@ -155,35 +169,34 @@ export async function registerRoutes(
             <h2 style="color: #9A0A0A; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px;">Player Details</h2>
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
               ${[
-                ["Full Name", body.playerName],
-                ["Date of Birth", body.dob],
-                ["Gender", body.gender],
-                ["Current School", body.school],
-                ["School Year", body.schoolYear],
-                ["County", body.county],
-                ["Current Club", body.club],
-                ["Position(s)", body.position],
-                ["Level / League", body.level || "—"],
+                ["Full Name", escapeHtml(body.playerName)],
+                ["Date of Birth", escapeHtml(body.dob)],
+                ["Gender", escapeHtml(body.gender)],
+                ["Current School", escapeHtml(body.school)],
+                ["County", escapeHtml(body.county)],
+                ["Current Club", escapeHtml(body.club)],
+                ["Position(s)", escapeHtml(body.position)],
+                ["Level / League", escapeHtml(body.level) || "—"],
               ].map(([k, v]) => `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; width: 40%; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">${k}</td><td style="padding: 8px; background: #1a1e25; color: #E2E2E1;">${v}</td></tr>`).join("")}
             </table>
 
             <h2 style="color: #9A0A0A; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px;">Football Profile</h2>
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
-              <tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; width: 40%; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Highlight Video</td><td style="padding: 8px; background: #1a1e25; color: #E2E2E1;"><a href="${body.highlightVideo}" style="color: #9A0A0A;">${body.highlightVideo}</a></td></tr>
-              ${body.extraLink1 ? `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Extra Link 1</td><td style="padding: 8px; background: #1a1e25;"><a href="${body.extraLink1}" style="color: #9A0A0A;">${body.extraLink1}</a></td></tr>` : ""}
-              ${body.extraLink2 ? `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Extra Link 2</td><td style="padding: 8px; background: #1a1e25;"><a href="${body.extraLink2}" style="color: #9A0A0A;">${body.extraLink2}</a></td></tr>` : ""}
-              ${body.extraLink3 ? `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Extra Link 3</td><td style="padding: 8px; background: #1a1e25;"><a href="${body.extraLink3}" style="color: #9A0A0A;">${body.extraLink3}</a></td></tr>` : ""}
-              ${body.notes ? `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Notes</td><td style="padding: 8px; background: #1a1e25; color: #E2E2E1;">${body.notes}</td></tr>` : ""}
+              <tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; width: 40%; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Highlight Video</td><td style="padding: 8px; background: #1a1e25; color: #E2E2E1;"><a href="${safeUrl(body.highlightVideo)}" style="color: #9A0A0A;">${escapeHtml(body.highlightVideo)}</a></td></tr>
+              ${body.extraLink1 ? `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Extra Link 1</td><td style="padding: 8px; background: #1a1e25;"><a href="${safeUrl(body.extraLink1)}" style="color: #9A0A0A;">${escapeHtml(body.extraLink1)}</a></td></tr>` : ""}
+              ${body.extraLink2 ? `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Extra Link 2</td><td style="padding: 8px; background: #1a1e25;"><a href="${safeUrl(body.extraLink2)}" style="color: #9A0A0A;">${escapeHtml(body.extraLink2)}</a></td></tr>` : ""}
+              ${body.extraLink3 ? `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Extra Link 3</td><td style="padding: 8px; background: #1a1e25;"><a href="${safeUrl(body.extraLink3)}" style="color: #9A0A0A;">${escapeHtml(body.extraLink3)}</a></td></tr>` : ""}
+              ${body.notes ? `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Notes</td><td style="padding: 8px; background: #1a1e25; color: #E2E2E1;">${escapeHtml(body.notes)}</td></tr>` : ""}
             </table>
 
             <h2 style="color: #9A0A0A; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px;">Parent / Guardian</h2>
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
               ${[
-                ["Name", body.parentName],
-                ["Email", parentEmail],
-                ["Phone", body.parentPhone],
-                ["How Did They Hear?", body.hearAboutUs || "—"],
-                ["Message", body.message || "—"],
+                ["Name", escapeHtml(body.parentName)],
+                ["Email", escapeHtml(parentEmail)],
+                ["Phone", escapeHtml(body.parentPhone)],
+                ["How Did They Hear?", escapeHtml(body.hearAboutUs) || "—"],
+                ["Message", escapeHtml(body.message) || "—"],
               ].map(([k, v]) => `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; width: 40%; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">${k}</td><td style="padding: 8px; background: #1a1e25; color: #E2E2E1;">${v}</td></tr>`).join("")}
             </table>
 
@@ -196,8 +209,8 @@ export async function registerRoutes(
             <div style="background: #9A0A0A; padding: 20px; border-radius: 6px; margin-bottom: 30px; text-align: center;">
               <h1 style="color: white; margin: 0; font-size: 24px; letter-spacing: 2px;">APPLICATION RECEIVED</h1>
             </div>
-            <p style="color: #B9B2A5;">Dear ${body.parentName},</p>
-            <p style="color: #B9B2A5;">Thank you for submitting an application for <strong style="color: white;">${body.playerName}</strong> to the Andy Reid Elite Soccer Academy Transition Year Programme.</p>
+            <p style="color: #B9B2A5;">Dear ${escapeHtml(body.parentName)},</p>
+            <p style="color: #B9B2A5;">Thank you for submitting an application for <strong style="color: white;">${escapeHtml(body.playerName)}</strong> to the Andy Reid Elite Soccer Academy Transition Year Programme.</p>
             <p style="color: #B9B2A5;">We've received your application and our coaching team will review it carefully. You can expect to hear from us within <strong style="color: white;">5-7 working days</strong>.</p>
 
             <div style="background: #1a1e25; border: 1px solid #333; border-radius: 6px; padding: 20px; margin: 30px 0;">
@@ -223,7 +236,7 @@ export async function registerRoutes(
             from: fromEmail,
             to: adminEmail,
             replyTo: parentEmail,
-            subject: `New Application: ${body.playerName} — ${body.club}`,
+            subject: `New Application: ${String(body.playerName).replace(/[\r\n]/g, " ")} — ${String(body.club).replace(/[\r\n]/g, " ")}`,
             html: htmlBody,
           }),
           sendEmail(resend, "applicant confirmation", {

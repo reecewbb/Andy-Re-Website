@@ -41,7 +41,7 @@ export default function Cookies() {
           </div>
           <div>
             <h2 className="font-heading text-2xl text-white uppercase tracking-wide mb-3">Contact</h2>
-            <p>For questions about our cookie policy: <a href="mailto:admissions@areidacademy.ie" className="text-[#9A0A0A]">admissions@areidacademy.ie</a></p>
+            <p>For questions about our cookie policy: <a href="mailto:admissions@andyreidelitesocceracademy.ie" className="text-[#9A0A0A]">admissions@andyreidelitesocceracademy.ie</a></p>
           </div>
         </div>
       </section>

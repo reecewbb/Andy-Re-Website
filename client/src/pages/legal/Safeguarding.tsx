@@ -23,7 +23,7 @@ export default function Safeguarding() {
           </div>
           <div>
             <h2 className="font-heading text-2xl text-white uppercase tracking-wide mb-3">Reporting Concerns</h2>
-            <p>If you have any concerns about the welfare of a young person in our programme, please contact us immediately at <a href="mailto:admissions@areidacademy.ie" className="text-[#9A0A0A]">admissions@areidacademy.ie</a> or call <a href="tel:+35301234567" className="text-[#9A0A0A]">+353 01 234 5678</a>. Concerns can also be reported directly to Tusla at <a href="https://www.tusla.ie" target="_blank" rel="noopener noreferrer" className="text-[#9A0A0A]">www.tusla.ie</a>.</p>
+            <p>If you have any concerns about the welfare of a young person in our programme, please contact us immediately at <a href="mailto:admissions@andyreidelitesocceracademy.ie" className="text-[#9A0A0A]">admissions@andyreidelitesocceracademy.ie</a> or call <a href="tel:+35301234567" className="text-[#9A0A0A]">+353 01 234 5678</a>. Concerns can also be reported directly to Tusla at <a href="https://www.tusla.ie" target="_blank" rel="noopener noreferrer" className="text-[#9A0A0A]">www.tusla.ie</a>.</p>
           </div>
           <div>
             <h2 className="font-heading text-2xl text-white uppercase tracking-wide mb-3">Code of Conduct</h2>

@@ -15,14 +15,10 @@ const step1Schema = z.object({
   dob: z.string().min(1, "Date of birth is required"),
   gender: z.string().min(1, "Please select a gender"),
   school: z.string().min(2, "School name is required"),
-  schoolYear: z.string().min(1, "Please select a school year"),
   county: z.string().min(2, "County is required"),
   club: z.string().min(2, "Current club is required"),
   position: z.string().min(2, "Playing position is required"),
   level: z.string().optional(),
-});
-
-const step2Schema = z.object({
   highlightVideo: z.string().url("Please enter a valid URL").min(1, "Highlight video link is required"),
   extraLink1: z.string().optional(),
   extraLink2: z.string().optional(),
@@ -30,7 +26,7 @@ const step2Schema = z.object({
   notes: z.string().optional(),
 });
 
-const step3Schema = z.object({
+const step2Schema = z.object({
   parentName: z.string().min(2, "Parent/guardian name is required"),
   parentEmail: z.string().email("Please enter a valid email address"),
   parentPhone: z.string().min(7, "Phone number is required"),
@@ -43,12 +39,10 @@ const step3Schema = z.object({
 
 type Step1Data = z.infer<typeof step1Schema>;
 type Step2Data = z.infer<typeof step2Schema>;
-type Step3Data = z.infer<typeof step3Schema>;
 
 const steps = [
   { number: 1, label: "Player Details" },
-  { number: 2, label: "Football Profile" },
-  { number: 3, label: "Parent & Consent" },
+  { number: 2, label: "Parent & Consent" },
 ];
 
 function StepIndicator({ current }: { current: number }) {
@@ -111,14 +105,12 @@ export default function Apply() {
   const [, setLocation] = useLocation();
   const [currentStep, setCurrentStep] = useState(1);
   const [step1Data, setStep1Data] = useState<Step1Data | null>(null);
-  const [step2Data, setStep2Data] = useState<Step2Data | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const form1 = useForm<Step1Data>({ resolver: zodResolver(step1Schema), defaultValues: { gender: "", schoolYear: "" } });
-  const form2 = useForm<Step2Data>({ resolver: zodResolver(step2Schema) });
-  const form3 = useForm<Step3Data>({
-    resolver: zodResolver(step3Schema),
+  const form1 = useForm<Step1Data>({ resolver: zodResolver(step1Schema), defaultValues: { gender: "" } });
+  const form2 = useForm<Step2Data>({
+    resolver: zodResolver(step2Schema),
     defaultValues: { consentParent: false, consentContact: false, honeypot: "" },
   });
 
@@ -128,21 +120,14 @@ export default function Apply() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
-  const handleStep2 = form2.handleSubmit((data) => {
-    setStep2Data(data);
-    setCurrentStep(3);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-
-  const handleStep3 = form3.handleSubmit(async (data) => {
+  const handleStep2 = form2.handleSubmit(async (data) => {
     if (data.honeypot) return;
-    if (!step1Data || !step2Data) return;
+    if (!step1Data) return;
     setIsSubmitting(true);
     setSubmitError(null);
     try {
       await apiRequest("POST", "/api/apply", {
         ...step1Data,
-        ...step2Data,
         ...data,
         honeypot: undefined,
       });
@@ -220,17 +205,6 @@ export default function Apply() {
                     />
                   </FormField>
 
-                  <FormField label="Current School Year" required error={form1.formState.errors.schoolYear?.message}>
-                    <select {...form1.register("schoolYear")} className={selectClass} data-testid="select-school-year">
-                      <option value="">Select year...</option>
-                      <option value="3rd-year">3rd Year</option>
-                      <option value="ty">Transition Year (TY)</option>
-                      <option value="5th-year">5th Year</option>
-                      <option value="6th-year">6th Year</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </FormField>
-
                   <FormField label="County" required error={form1.formState.errors.county?.message}>
                     <Input
                       {...form1.register("county")}
@@ -266,31 +240,15 @@ export default function Apply() {
                       data-testid="input-level"
                     />
                   </FormField>
-                </div>
-              </div>
 
-              <div className="flex justify-end">
-                <Button type="submit" className="bg-[#9A0A0A] text-white font-semibold text-xs uppercase tracking-widest px-8" data-testid="button-next-step-1">
-                  Next: Football Profile <ChevronRight className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-            </form>
-          )}
-
-          {/* Step 2: Football Profile */}
-          {currentStep === 2 && (
-            <form onSubmit={handleStep2} className="space-y-6">
-              <div className="bg-[#1a1e25] border border-white/10 rounded-md p-8">
-                <h2 className="font-heading text-3xl text-white uppercase tracking-wide mb-6">Football Profile & Links</h2>
-                <div className="space-y-5">
                   <FormField
                     label="Highlight Video Link"
                     required
-                    error={form2.formState.errors.highlightVideo?.message}
-                    hint="Upload to YouTube, Vimeo, or Google Drive. If using Drive: Share → Anyone with the link can view, or share directly with admissions@areidacademy.ie"
+                    error={form1.formState.errors.highlightVideo?.message}
+                    hint="Upload to YouTube, Vimeo, or Google Drive. If using Drive: Share \u2192 Anyone with the link can view, or share directly with admissions@andyreidelitesocceracademy.ie"
                   >
                     <Input
-                      {...form2.register("highlightVideo")}
+                      {...form1.register("highlightVideo")}
                       placeholder="https://youtube.com/watch?v=..."
                       className={inputClass}
                       data-testid="input-highlight-video"
@@ -299,19 +257,19 @@ export default function Apply() {
 
                   <div className="bg-[#111316] border border-[#9A0A0A]/20 rounded-md p-4">
                     <p className="text-[#9A0A0A] text-xs uppercase tracking-wider font-semibold mb-2">Additional Links (Optional)</p>
-                    <p className="text-[#655955] text-xs mb-4">Add up to 3 additional links — match footage, player profile, CV, etc.</p>
+                    <p className="text-[#655955] text-xs mb-4">Add up to 3 additional links \u2014 match footage, player profile, CV, etc.</p>
                     <div className="space-y-3">
-                      <Input {...form2.register("extraLink1")} placeholder="Extra link 1 (match footage, player profile...)" className={inputClass} data-testid="input-extra-link-1" />
-                      <Input {...form2.register("extraLink2")} placeholder="Extra link 2" className={inputClass} data-testid="input-extra-link-2" />
-                      <Input {...form2.register("extraLink3")} placeholder="Extra link 3" className={inputClass} data-testid="input-extra-link-3" />
+                      <Input {...form1.register("extraLink1")} placeholder="Extra link 1 (match footage, player profile...)" className={inputClass} data-testid="input-extra-link-1" />
+                      <Input {...form1.register("extraLink2")} placeholder="Extra link 2" className={inputClass} data-testid="input-extra-link-2" />
+                      <Input {...form1.register("extraLink3")} placeholder="Extra link 3" className={inputClass} data-testid="input-extra-link-3" />
                     </div>
                   </div>
 
-                  <FormField label="Playing History & Achievements (Optional)" error={form2.formState.errors.notes?.message}>
+                  <FormField label="Playing History & Achievements (Optional)" error={form1.formState.errors.notes?.message}>
                     <textarea
-                      {...form2.register("notes")}
+                      {...form1.register("notes")}
                       rows={5}
-                      placeholder="Tell us about your football journey — clubs played for, representative honours, notable achievements, trials, etc."
+                      placeholder="Tell us about your football journey \u2014 clubs played for, representative honours, notable achievements, trials, etc."
                       className="w-full bg-[#0e1014] border border-white/10 text-white rounded-md px-3 py-2.5 text-sm focus:border-[#9A0A0A]/60 focus:outline-none resize-none placeholder:text-[#655955]"
                       data-testid="textarea-notes"
                     />
@@ -319,63 +277,54 @@ export default function Apply() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between gap-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => { setCurrentStep(1); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-                  className="border-white/20 text-white bg-white/5 text-xs uppercase tracking-widest"
-                  data-testid="button-prev-step-2"
-                >
-                  <ChevronLeft className="w-4 h-4 mr-1" /> Back
-                </Button>
-                <Button type="submit" className="bg-[#9A0A0A] text-white font-semibold text-xs uppercase tracking-widest px-8" data-testid="button-next-step-2">
+              <div className="flex justify-end">
+                <Button type="submit" className="bg-[#9A0A0A] text-white font-semibold text-xs uppercase tracking-widest px-8" data-testid="button-next-step-1">
                   Next: Parent Details <ChevronRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
             </form>
           )}
 
-          {/* Step 3: Parent Details & Consent */}
-          {currentStep === 3 && (
-            <form onSubmit={handleStep3} className="space-y-6">
+          {/* Step 2: Parent Details & Consent */}
+          {currentStep === 2 && (
+            <form onSubmit={handleStep2} className="space-y-6">
               {/* Honeypot */}
-              <input type="text" {...form3.register("honeypot")} className="sr-only" tabIndex={-1} autoComplete="off" />
+              <input type="text" {...form2.register("honeypot")} className="sr-only" tabIndex={-1} autoComplete="off" />
 
               <div className="bg-[#1a1e25] border border-white/10 rounded-md p-8">
                 <h2 className="font-heading text-3xl text-white uppercase tracking-wide mb-6">Parent / Guardian Details</h2>
                 <div className="space-y-5">
-                  <FormField label="Parent / Guardian Full Name" required error={form3.formState.errors.parentName?.message}>
+                  <FormField label="Parent / Guardian Full Name" required error={form2.formState.errors.parentName?.message}>
                     <Input
-                      {...form3.register("parentName")}
+                      {...form2.register("parentName")}
                       placeholder="e.g. Mary Smith"
                       className={inputClass}
                       data-testid="input-parent-name"
                     />
                   </FormField>
 
-                  <FormField label="Parent / Guardian Email" required error={form3.formState.errors.parentEmail?.message}>
+                  <FormField label="Parent / Guardian Email" required error={form2.formState.errors.parentEmail?.message}>
                     <Input
                       type="email"
-                      {...form3.register("parentEmail")}
+                      {...form2.register("parentEmail")}
                       placeholder="mary@example.com"
                       className={inputClass}
                       data-testid="input-parent-email"
                     />
                   </FormField>
 
-                  <FormField label="Parent / Guardian Mobile" required error={form3.formState.errors.parentPhone?.message}>
+                  <FormField label="Parent / Guardian Mobile" required error={form2.formState.errors.parentPhone?.message}>
                     <Input
                       type="tel"
-                      {...form3.register("parentPhone")}
+                      {...form2.register("parentPhone")}
                       placeholder="+353 87 123 4567"
                       className={inputClass}
                       data-testid="input-parent-phone"
                     />
                   </FormField>
 
-                  <FormField label="How did you hear about us?" error={form3.formState.errors.hearAboutUs?.message}>
-                    <select {...form3.register("hearAboutUs")} className={selectClass} data-testid="select-hear-about-us">
+                  <FormField label="How did you hear about us?" error={form2.formState.errors.hearAboutUs?.message}>
+                    <select {...form2.register("hearAboutUs")} className={selectClass} data-testid="select-hear-about-us">
                       <option value="">Select...</option>
                       <option value="social-media">Social Media</option>
                       <option value="friend-family">Friend / Family</option>
@@ -387,9 +336,9 @@ export default function Apply() {
                     </select>
                   </FormField>
 
-                  <FormField label="Additional Message (Optional)" error={form3.formState.errors.message?.message}>
+                  <FormField label="Additional Message (Optional)" error={form2.formState.errors.message?.message}>
                     <textarea
-                      {...form3.register("message")}
+                      {...form2.register("message")}
                       rows={4}
                       placeholder="Any additional information you'd like to share with us..."
                       className="w-full bg-[#0e1014] border border-white/10 text-white rounded-md px-3 py-2.5 text-sm focus:border-[#9A0A0A]/60 focus:outline-none resize-none placeholder:text-[#655955]"
@@ -406,8 +355,8 @@ export default function Apply() {
                   <div className="flex items-start gap-3">
                     <Checkbox
                       id="consentParent"
-                      checked={form3.watch("consentParent")}
-                      onCheckedChange={(v) => form3.setValue("consentParent", Boolean(v), { shouldValidate: true })}
+                      checked={form2.watch("consentParent")}
+                      onCheckedChange={(v) => form2.setValue("consentParent", Boolean(v), { shouldValidate: true })}
                       className="mt-0.5 border-white/20 data-[state=checked]:bg-[#9A0A0A] data-[state=checked]:border-[#9A0A0A]"
                       data-testid="checkbox-consent-parent"
                     />
@@ -415,15 +364,15 @@ export default function Apply() {
                       I confirm that I am the parent or legal guardian of the player named in this application and I consent to submitting this application on their behalf. <span className="text-[#9A0A0A]">*</span>
                     </label>
                   </div>
-                  {form3.formState.errors.consentParent && (
-                    <FieldError message={form3.formState.errors.consentParent.message} />
+                  {form2.formState.errors.consentParent && (
+                    <FieldError message={form2.formState.errors.consentParent.message} />
                   )}
 
                   <div className="flex items-start gap-3">
                     <Checkbox
                       id="consentContact"
-                      checked={form3.watch("consentContact")}
-                      onCheckedChange={(v) => form3.setValue("consentContact", Boolean(v), { shouldValidate: true })}
+                      checked={form2.watch("consentContact")}
+                      onCheckedChange={(v) => form2.setValue("consentContact", Boolean(v), { shouldValidate: true })}
                       className="mt-0.5 border-white/20 data-[state=checked]:bg-[#9A0A0A] data-[state=checked]:border-[#9A0A0A]"
                       data-testid="checkbox-consent-contact"
                     />
@@ -431,8 +380,8 @@ export default function Apply() {
                       I understand that Andy Reid Elite Soccer Academy may contact me via email or phone regarding this application and the programme. <span className="text-[#9A0A0A]">*</span>
                     </label>
                   </div>
-                  {form3.formState.errors.consentContact && (
-                    <FieldError message={form3.formState.errors.consentContact.message} />
+                  {form2.formState.errors.consentContact && (
+                    <FieldError message={form2.formState.errors.consentContact.message} />
                   )}
                 </div>
               </div>
@@ -448,9 +397,9 @@ export default function Apply() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => { setCurrentStep(2); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                  onClick={() => { setCurrentStep(1); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                   className="border-white/20 text-white bg-white/5 text-xs uppercase tracking-widest"
-                  data-testid="button-prev-step-3"
+                  data-testid="button-prev-step-2"
                 >
                   <ChevronLeft className="w-4 h-4 mr-1" /> Back
                 </Button>
@@ -484,7 +433,7 @@ export default function Apply() {
               { label: "Applications Open", value: "Feb 26, 2026" },
             ].map((item, i) => (
               <div key={i}>
-                <div className="font-heading text-2xl text-[#9A0A0A] leading-none mb-1">{item.value}</div>
+                <div className="font-heading text-2xl text-[#9A0A0A] mb-1">{item.value}</div>
                 <div className="text-[#655955] text-xs uppercase tracking-wider">{item.label}</div>
               </div>
             ))}

@@ -7,8 +7,6 @@ const navLinks = [
   { label: "Home", href: "/" },
   { label: "Programme", href: "/programme" },
   { label: "Curriculum", href: "/curriculum" },
-  { label: "Experience", href: "/experience" },
-  { label: "Outcomes", href: "/outcomes" },
   { label: "Coaches", href: "/coaches" },
   { label: "Locations", href: "/locations" },
   { label: "Testimonials", href: "/testimonials" },
@@ -74,14 +72,6 @@ export default function Nav() {
           <div className="hidden xl:flex items-center gap-3">
             <Button
               asChild
-              variant="outline"
-              size="sm"
-              className="text-[#B9B2A5] border-[#655955] bg-transparent text-xs uppercase tracking-wider"
-            >
-              <Link href="/#contact">Request Info</Link>
-            </Button>
-            <Button
-              asChild
               size="sm"
               className="bg-[#9A0A0A] text-white text-xs uppercase tracking-wider font-semibold px-5"
             >
@@ -116,13 +106,6 @@ export default function Nav() {
               </Link>
             ))}
             <div className="pt-3 flex flex-col gap-3">
-              <Button
-                asChild
-                variant="outline"
-                className="text-[#B9B2A5] border-[#655955] bg-transparent text-xs uppercase tracking-wider"
-              >
-                <Link href="/#contact">Request Info</Link>
-              </Button>
               <Button
                 asChild
                 className="bg-[#9A0A0A] text-white text-sm uppercase tracking-wider font-semibold"

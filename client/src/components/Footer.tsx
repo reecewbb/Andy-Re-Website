@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { MapPin, Mail, Phone, Instagram, Youtube, Facebook } from "lucide-react";
+import { MapPin, Mail } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -19,17 +19,6 @@ export default function Footer() {
             <p className="text-sm leading-relaxed text-[#655955] mt-4">
               Ireland's premier football and education programme. Empowering young players to reach their full potential on and off the pitch.
             </p>
-            <div className="flex gap-3 mt-6">
-              <a href="#" aria-label="Instagram" className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center hover:border-[#9A0A0A] hover:text-white transition-colors">
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a href="#" aria-label="YouTube" className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center hover:border-[#9A0A0A] hover:text-white transition-colors">
-                <Youtube className="w-4 h-4" />
-              </a>
-              <a href="#" aria-label="Facebook" className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center hover:border-[#9A0A0A] hover:text-white transition-colors">
-                <Facebook className="w-4 h-4" />
-              </a>
-            </div>
           </div>
 
           <div>
@@ -38,8 +27,6 @@ export default function Footer() {
               {[
                 ["Programme Overview", "/programme"],
                 ["Curriculum", "/curriculum"],
-                ["Experience", "/experience"],
-                ["Outcomes", "/outcomes"],
                 ["Coaches", "/coaches"],
                 ["Locations", "/locations"],
               ].map(([label, href]) => (
@@ -59,8 +46,6 @@ export default function Footer() {
                 ["Apply Now", "/apply"],
                 ["Privacy Policy", "/privacy"],
                 ["Terms of Use", "/terms"],
-                ["Safeguarding", "/safeguarding"],
-                ["Medical Policy", "/medical"],
                 ["Cookie Policy", "/cookies"],
               ].map(([label, href]) => (
                 <li key={href}>
@@ -79,13 +64,9 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-[#9A0A0A] flex-shrink-0" />
-                <a href="mailto:admissions@areidacademy.ie" className="hover:text-white transition-colors">
-                  admissions@areidacademy.ie
+                <a href="mailto:admissions@andyreidelitesocceracademy.ie" className="hover:text-white transition-colors">
+                  admissions@andyreidelitesocceracademy.ie
                 </a>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone className="w-4 h-4 text-[#9A0A0A] flex-shrink-0" />
-                <a href="tel:+35301234567" className="hover:text-white transition-colors">+353 01 234 5678</a>
               </li>
             </ul>
             <div className="mt-6 p-4 bg-[#9A0A0A]/10 border border-[#9A0A0A]/20 rounded-md">
@@ -104,7 +85,6 @@ export default function Footer() {
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
             <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
             <Link href="/cookies" className="hover:text-white transition-colors">Cookies</Link>
-            <Link href="/safeguarding" className="hover:text-white transition-colors">Safeguarding</Link>
           </div>
         </div>
       </div>

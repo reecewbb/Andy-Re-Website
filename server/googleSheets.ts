@@ -6,7 +6,6 @@ type ApplicationRow = {
   dob: string;
   gender: string;
   school: string;
-  schoolYear: string;
   county: string;
   club: string;
   position: string;
@@ -53,7 +52,6 @@ export async function appendApplicationRow(row: ApplicationRow) {
     row.dob,                  // dob
     row.gender,               // gender
     row.school,               // school
-    row.schoolYear,           // schoolYear
     row.county,               // county
     row.club,                 // club
     row.position,             // position

@@ -31,7 +31,7 @@ const locations = [
     type: "Elite Training & Match Facility",
     desc: "Corduff Sports Centre is our dedicated high-performance training venue. A purpose-built facility with premium pitches and sports infrastructure, Corduff provides the professional match and training environment our players need to develop at the highest level.",
     features: [
-      "Premium grass and 3G training pitches",
+      "New 4G state-of-the-art training pitch",
       "Full match facilities with floodlights",
       "Professional changing and medical rooms",
       "Video analysis suite",
@@ -58,7 +58,7 @@ export default function Locations() {
             Our Facilities
           </div>
           <h1 className="font-heading text-6xl sm:text-7xl lg:text-8xl text-white uppercase tracking-wide leading-none mb-6">
-            WORLD-CLASS<br /><span className="text-[#9A0A0A]">FACILITIES</span>
+            ACADEMY<br /><span className="text-[#9A0A0A]">FACILITIES</span>
           </h1>
           <p className="text-[#B9B2A5] text-xl max-w-2xl mx-auto leading-relaxed">
             Train where the pros train. Our facilities in Dublin 15 provide everything a serious footballer needs to develop to their full potential.

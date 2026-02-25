@@ -17,15 +17,11 @@ const faqs = [
       },
       {
         q: "What age group is the programme for?",
-        a: "The programme is primarily for students in Transition Year (TY), which typically corresponds to students aged 15-16. However, we consider applications from players in other year groups depending on their circumstances — please contact us if you're unsure.",
+        a: "The programme is primarily for students in Transition Year (TY), which typically corresponds to students aged 15-16. However, we consider applications from players in other year groups depending on their circumstances \u2014 please contact us if you're unsure.",
       },
       {
         q: "Is the programme open to girls as well as boys?",
-        a: "Yes. The Andy Reid Elite Soccer Academy is open to both male and female players. We have an excellent track record of developing female players, with 25 USA scholarships and 78 LOI first team contracts produced across our combined boys and girls programmes.",
-      },
-      {
-        q: "How is the programme structured during the week?",
-        a: "Players train five days a week, with morning and afternoon sessions. A typical day includes a technical or tactical session in the morning, followed by athletic development, video analysis, or education sessions in the afternoon. Match days are usually on Fridays.",
+        a: "Yes. The Andy Reid Elite Soccer Academy is open to both male and female players.",
       },
     ],
   },
@@ -38,11 +34,11 @@ const faqs = [
       },
       {
         q: "What do I need to apply?",
-        a: "You'll need to complete our online application form including personal and school details, a highlight video link (YouTube, Vimeo, or Google Drive), and parent/guardian details and consent. We may invite shortlisted applicants for a trial or interview.",
+        a: "You'll need to complete our online application form including personal, football and school details.",
       },
       {
         q: "Is there a trial or interview process?",
-        a: "Following review of your application and video, we may invite you to attend a trial session at our facilities. We assess players holistically — technically, physically, mentally, and academically — before making final decisions.",
+        a: "Following review of your application, we may invite you to attend a trial session at our facilities. We assess players holistically \u2014 technically, physically, mentally, and academically \u2014 before making final decisions.",
       },
       {
         q: "What happens after I apply?",
@@ -55,40 +51,15 @@ const faqs = [
     questions: [
       {
         q: "Where does the programme take place?",
-        a: "The programme is based at two world-class venues in Dublin 15: TU Blanchardstown (our main academic and training hub) and Corduff Sports Centre (our dedicated match and high-performance training facility). Both venues are within minutes of each other.",
+        a: "The programme is based at two venues in Dublin 15: TU Blanchardstown and Corduff Sports Centre. Both venues are within minutes of each other.",
       },
       {
         q: "What are the programme dates?",
         a: "The 2026/27 programme runs from September 3, 2026 to May 28, 2027. Players are expected to be available for all training and match days throughout the programme.",
       },
       {
-        q: "Do I need to attend school as well?",
-        a: "Yes. The programme is designed to complement your Transition Year curriculum, not replace it. We work directly with schools to ensure players meet their academic requirements. Full communication with your school is encouraged from the start.",
-      },
-      {
         q: "How much does the programme cost?",
-        a: "Programme fees will be communicated during the application process. We are committed to making the programme as accessible as possible and offer payment plans and limited scholarship support in cases of genuine financial need. Please contact us to discuss.",
-      },
-      {
-        q: "What equipment and kit do I need?",
-        a: "Players are expected to bring appropriate training gear to each session. The academy provides kit for match days. A full equipment list will be provided to all accepted players prior to the programme start date.",
-      },
-    ],
-  },
-  {
-    category: "Outcomes & Opportunities",
-    questions: [
-      {
-        q: "What outcomes have previous players achieved?",
-        a: "Our alumni have gone on to represent Ireland at underage and senior international level, sign professional contracts in the League of Ireland, the UK, and Europe, and earn full academic scholarships to US colleges. Our combined stats include 136 underage internationals, 78 LOI first team contracts, and 25 USA scholarships.",
-      },
-      {
-        q: "Do you help with trials and professional contracts?",
-        a: "Yes. Part of our role is to facilitate trial opportunities and connect players with professional clubs, scouts, and coaches through our extensive network. We work to maximise exposure opportunities for every player in the programme.",
-      },
-      {
-        q: "What about USA scholarships?",
-        a: "We have a strong track record of placing players in US colleges on full and partial athletic scholarships. We guide players and families through the entire process, from NCAA eligibility to application support. This is an option available to players who meet the required academic and athletic criteria.",
+        a: "Programme fees will be communicated during the application process. We are committed to making the programme as accessible as possible and offer payment plans in cases of genuine financial need.",
       },
     ],
   },
@@ -154,7 +125,7 @@ export default function FAQ() {
           <p className="text-[#B9B2A5] text-lg mb-8">Our admissions team is happy to chat through any questions you might have.</p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Button asChild size="lg" className="bg-[#9A0A0A] text-white font-bold text-sm uppercase tracking-widest px-10">
-              <a href="mailto:admissions@areidacademy.ie">Email Us</a>
+              <a href="mailto:admissions@andyreidelitesocceracademy.ie">Email Us</a>
             </Button>
             <Button asChild variant="outline" size="lg" className="border-white/20 text-white bg-white/5 text-xs uppercase tracking-widest">
               <Link href="/apply">Apply Now</Link>
