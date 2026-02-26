@@ -1,10 +1,51 @@
 import { Link } from "wouter";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Award, Shield, Trophy } from "lucide-react";
+import { Award, Shield, Trophy, ChevronLeft, ChevronRight, X } from "lucide-react";
 import andyReidImg from "@assets/AndyReidCoaching_1772065939274.png";
-import denisHylandImg from "@assets/DenisHylandCoaching_1772065939274.jpg";
+import denisHylandImg from "@assets/DenisHylandCoaching_1772092148075.jpg";
+import gallery1 from "@assets/06.10.25_IRL_MU21_MD-4_Training_Photo-20_1772092148075.jpg";
+import gallery2 from "@assets/06.10.25_IRL_MU21_MD-4_Training_Photo-35_1772092148075.jpg";
+import gallery3 from "@assets/06.10.25_IRL_MU21_MD-4_Training_Photo-36_1772092148075.jpg";
+import gallery4 from "@assets/06.10.25_IRL_MU21_MD-4_Training_Photo-100_1772092148075.jpg";
+import gallery5 from "@assets/06.10.25_IRL_MU21_MD-4_Training_Photo-101_1772092148075.jpg";
+
+const galleryImages = [
+  { src: gallery1, alt: "Ireland U21 Training Session" },
+  { src: gallery2, alt: "Coaching on the pitch" },
+  { src: gallery3, alt: "Training ground instruction" },
+  { src: gallery4, alt: "Player development session" },
+  { src: gallery5, alt: "Elite coaching in action" },
+];
 
 export default function Coaches() {
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const goNext = useCallback(() => {
+    setLightboxIndex((prev) => prev !== null ? (prev + 1) % galleryImages.length : null);
+  }, []);
+
+  const goPrev = useCallback(() => {
+    setLightboxIndex((prev) => prev !== null ? (prev - 1 + galleryImages.length) % galleryImages.length : null);
+  }, []);
+
+  const closeLightbox = useCallback(() => setLightboxIndex(null), []);
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowRight") goNext();
+      else if (e.key === "ArrowLeft") goPrev();
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKey);
+    };
+  }, [lightboxIndex, closeLightbox, goNext, goPrev]);
+
   return (
     <div className="bg-[#111316] text-white pt-20">
       {/* Hero */}
@@ -118,6 +159,76 @@ export default function Coaches() {
           </div>
         </div>
       </section>
+
+      {/* Training Gallery */}
+      <section className="py-20 bg-[#111316]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="w-12 h-1 bg-[#9A0A0A] mx-auto mb-6" />
+            <h2 className="font-heading text-5xl sm:text-6xl text-white uppercase tracking-wide leading-none mb-4">
+              ON THE <span className="text-[#9A0A0A]">TRAINING GROUND</span>
+            </h2>
+            <p className="text-[#B9B2A5] text-lg max-w-2xl mx-auto">
+              Our coaches in action with Ireland's U21 squad — the same elite-level coaching your son will receive.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+            {galleryImages.map((image, i) => (
+              <button
+                key={i}
+                onClick={() => setLightboxIndex(i)}
+                aria-label={`View ${image.alt}`}
+                className={`relative overflow-hidden rounded-md border border-white/10 group cursor-pointer ${i === 0 ? "md:col-span-2 md:row-span-2" : ""}`}
+              >
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  className="w-full h-full object-cover aspect-[4/3] group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300" />
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {lightboxIndex !== null && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Image gallery lightbox"
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
+          onClick={closeLightbox}
+        >
+          <button
+            onClick={(e) => { e.stopPropagation(); closeLightbox(); }}
+            aria-label="Close lightbox"
+            className="absolute top-6 right-6 text-white/70 hover:text-white z-10"
+          >
+            <X className="w-8 h-8" />
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); goPrev(); }}
+            aria-label="Previous image"
+            className="absolute left-4 sm:left-8 text-white/70 hover:text-white z-10"
+          >
+            <ChevronLeft className="w-10 h-10" />
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); goNext(); }}
+            aria-label="Next image"
+            className="absolute right-4 sm:right-8 text-white/70 hover:text-white z-10"
+          >
+            <ChevronRight className="w-10 h-10" />
+          </button>
+          <img
+            src={galleryImages[lightboxIndex].src}
+            alt={galleryImages[lightboxIndex].alt}
+            className="max-w-[90vw] max-h-[85vh] object-contain rounded-md"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
 
       {/* CTA */}
       <section className="py-20 bg-[#9A0A0A]">
