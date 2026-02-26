@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import badgeImg from "@assets/AndyReidBadge_1772064267097.png";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -39,9 +40,7 @@ export default function Nav() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           <Link href="/" className="flex items-center gap-3 flex-shrink-0 pl-[10px] pr-[10px]">
-            <div className="w-10 h-10 rounded-full bg-[#9A0A0A] flex items-center justify-center">
-              <span className="font-heading text-white text-lg leading-none">AR</span>
-            </div>
+            <img src={badgeImg} alt="AR Elite Soccer Academy" className="w-10 h-10 rounded-full object-cover" style={{ objectPosition: "center 30%" }} />
             <div>
               <div className="font-heading text-white text-lg leading-none tracking-wide">
                 ANDY REID

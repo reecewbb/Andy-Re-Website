@@ -10,10 +10,6 @@ type ApplicationRow = {
   club: string;
   position: string;
   level?: string;
-  highlightVideo: string;
-  extraLink1?: string;
-  extraLink2?: string;
-  extraLink3?: string;
   notes?: string;
   parentName: string;
   parentEmail: string;
@@ -44,29 +40,24 @@ export async function appendApplicationRow(row: ApplicationRow) {
 
   const sheets = getSheetsClient();
 
-  // MUST match your header order in the sheet:
   const values = [[
-    row.submittedAt,          // submitted_at
-    row.ip ?? "",             // ip
-    row.playerName,           // playerName
-    row.dob,                  // dob
-    row.gender,               // gender
-    row.school,               // school
-    row.county,               // county
-    row.club,                 // club
-    row.position,             // position
-    row.level ?? "",          // level
-    row.highlightVideo,       // highlightVideo
-    row.extraLink1 ?? "",     // extraLink1
-    row.extraLink2 ?? "",     // extraLink2
-    row.extraLink3 ?? "",     // extraLink3
-    row.notes ?? "",          // notes
-    row.parentName,           // parentName
-    row.parentEmail,          // parentEmail
-    row.parentPhone,          // parentPhone
-    row.hearAboutUs ?? "",    // hearAboutUs
-    row.message ?? "",        // message
-]];
+    row.submittedAt,
+    row.ip ?? "",
+    row.playerName,
+    row.dob,
+    row.gender,
+    row.school,
+    row.county,
+    row.club,
+    row.position,
+    row.level ?? "",
+    row.notes ?? "",
+    row.parentName,
+    row.parentEmail,
+    row.parentPhone,
+    row.hearAboutUs ?? "",
+    row.message ?? "",
+  ]];
 
   await sheets.spreadsheets.values.append({
     spreadsheetId,

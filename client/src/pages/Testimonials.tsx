@@ -1,6 +1,8 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Star, Quote } from "lucide-react";
+import killianPhillipsImg from "@assets/KillianPhillips_1772064267097.jpeg";
+import aidomoEmakhuImg from "@assets/AidomoEmakhu_1772064267097.jpeg";
 
 const playerTestimonials = [
   {
@@ -9,7 +11,7 @@ const playerTestimonials = [
     role: "Rep of Ireland Senior International Player",
     club: "St Mirren FC",
     initials: "KP",
-    photo: null,
+    photo: killianPhillipsImg,
   },
   {
     quote: "The TY programme played a huge role in improving my physical performance and preparing me for the demands of the next level. Denis' guidance and high standards pushed me to improve every day, teaching me the consistency and discipline required to perform and giving me a strong foundation to progress in my football career.",
@@ -17,7 +19,7 @@ const playerTestimonials = [
     role: "Professional Footballer",
     club: "Millwall FC",
     initials: "AE",
-    photo: null,
+    photo: aidomoEmakhuImg,
   },
 ];
 
@@ -26,29 +28,26 @@ const parentTestimonials = [
     quote: "From day one, the TY programme with Denis provided a professional and supportive environment. We saw real improvements in our children's football ability, maturity, and discipline. Both of my boys represented their country and now successfully combine football and education with UCD. The programme genuinely prepares players for both their sporting and academic futures.",
     name: "Lorraine Cailloce",
     role: "Parent",
-    child: "Luca & Killian Cailloce — UCD AFC",
+    child: "Luca & Killian Cailloce \u2014 UCD AFC",
     initials: "LC",
-    photo: null,
   },
   {
     quote: "Denis's TY programme was one of the best decisions we made for our son. From the very beginning, he stepped into a professional and supportive environment built on high standards. We saw tremendous progress in his football ability, along with real growth in his self-belief, discipline, and game awareness. The programme has been instrumental in preparing him for the next steps in both his football and educational journey.",
     name: "Fran Sheridan",
     role: "Parent",
-    child: "Ryan Sheridan — St Patrick's Athletic FC",
+    child: "Ryan Sheridan \u2014 St Patrick's Athletic FC",
     initials: "FS",
-    photo: null,
   },
 ];
 
-function TestimonialCard({ testimonial, type }: { testimonial: any; type: "player" | "parent" }) {
+function PlayerTestimonialCard({ testimonial }: { testimonial: typeof playerTestimonials[0] }) {
   return (
     <div className="bg-[#1a1e25] border border-white/10 rounded-md overflow-hidden hover-elevate">
-      {/* Photo area */}
-      <div className="w-full h-48 bg-[#0e1014] border-b border-white/10 flex items-center justify-center relative overflow-hidden">
+      <div className="w-full h-72 bg-[#0e1014] border-b border-white/10 relative overflow-hidden">
         {testimonial.photo ? (
-          <img src={testimonial.photo} alt={testimonial.name} className="w-full h-full object-cover object-top" />
+          <img src={testimonial.photo} alt={testimonial.name} className="w-full h-full object-cover" style={{ objectPosition: "center 20%" }} />
         ) : (
-          <div className="flex flex-col items-center gap-2 text-center px-4">
+          <div className="flex flex-col items-center justify-center h-full gap-2 text-center px-4">
             <div className="w-16 h-16 rounded-full bg-[#1a1e25] border-2 border-dashed border-white/20 flex items-center justify-center mb-1">
               <span className="font-heading text-[#9A0A0A] text-2xl">{testimonial.initials}</span>
             </div>
@@ -56,7 +55,6 @@ function TestimonialCard({ testimonial, type }: { testimonial: any; type: "playe
           </div>
         )}
       </div>
-
       <div className="p-8">
         <div className="flex gap-1 mb-4">
           {[...Array(5)].map((_, i) => (
@@ -74,7 +72,35 @@ function TestimonialCard({ testimonial, type }: { testimonial: any; type: "playe
           <div>
             <div className="text-white font-bold">{testimonial.name}</div>
             <div className="text-[#9A0A0A] text-xs uppercase tracking-wider font-medium">{testimonial.role}</div>
-            <div className="text-[#655955] text-xs">{type === "player" ? testimonial.club : testimonial.child}</div>
+            <div className="text-[#655955] text-xs">{testimonial.club}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ParentTestimonialCard({ testimonial }: { testimonial: typeof parentTestimonials[0] }) {
+  return (
+    <div className="bg-[#1a1e25] border border-white/10 rounded-md overflow-hidden hover-elevate">
+      <div className="p-8">
+        <div className="flex gap-1 mb-4">
+          {[...Array(5)].map((_, i) => (
+            <Star key={i} className="w-4 h-4 text-[#9A0A0A] fill-current" />
+          ))}
+        </div>
+        <Quote className="w-8 h-8 text-[#9A0A0A]/30 mb-4" />
+        <blockquote className="text-[#E2E2E1] leading-relaxed text-sm sm:text-base mb-8 italic">
+          "{testimonial.quote}"
+        </blockquote>
+        <div className="flex items-center gap-4 border-t border-white/10 pt-6">
+          <div className="w-12 h-12 bg-[#9A0A0A] rounded-full flex items-center justify-center flex-shrink-0">
+            <span className="font-heading text-white text-lg">{testimonial.initials}</span>
+          </div>
+          <div>
+            <div className="text-white font-bold">{testimonial.name}</div>
+            <div className="text-[#9A0A0A] text-xs uppercase tracking-wider font-medium">{testimonial.role}</div>
+            <div className="text-[#655955] text-xs">{testimonial.child}</div>
           </div>
         </div>
       </div>
@@ -110,7 +136,7 @@ export default function Testimonials() {
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             {playerTestimonials.map((t, i) => (
-              <TestimonialCard key={i} testimonial={t} type="player" />
+              <PlayerTestimonialCard key={i} testimonial={t} />
             ))}
           </div>
         </div>
@@ -144,7 +170,7 @@ export default function Testimonials() {
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             {parentTestimonials.map((t, i) => (
-              <TestimonialCard key={i} testimonial={t} type="parent" />
+              <ParentTestimonialCard key={i} testimonial={t} />
             ))}
           </div>
         </div>

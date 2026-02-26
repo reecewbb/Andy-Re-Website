@@ -19,10 +19,6 @@ const step1Schema = z.object({
   club: z.string().min(2, "Current club is required"),
   position: z.string().min(2, "Playing position is required"),
   level: z.string().optional(),
-  highlightVideo: z.string().url("Please enter a valid URL").min(1, "Highlight video link is required"),
-  extraLink1: z.string().optional(),
-  extraLink2: z.string().optional(),
-  extraLink3: z.string().optional(),
   notes: z.string().optional(),
 });
 
@@ -240,30 +236,6 @@ export default function Apply() {
                       data-testid="input-level"
                     />
                   </FormField>
-
-                  <FormField
-                    label="Highlight Video Link"
-                    required
-                    error={form1.formState.errors.highlightVideo?.message}
-                    hint="Upload to YouTube, Vimeo, or Google Drive. If using Drive: Share \u2192 Anyone with the link can view, or share directly with admissions@andyreidelitesocceracademy.ie"
-                  >
-                    <Input
-                      {...form1.register("highlightVideo")}
-                      placeholder="https://youtube.com/watch?v=..."
-                      className={inputClass}
-                      data-testid="input-highlight-video"
-                    />
-                  </FormField>
-
-                  <div className="bg-[#111316] border border-[#9A0A0A]/20 rounded-md p-4">
-                    <p className="text-[#9A0A0A] text-xs uppercase tracking-wider font-semibold mb-2">Additional Links (Optional)</p>
-                    <p className="text-[#655955] text-xs mb-4">Add up to 3 additional links \u2014 match footage, player profile, CV, etc.</p>
-                    <div className="space-y-3">
-                      <Input {...form1.register("extraLink1")} placeholder="Extra link 1 (match footage, player profile...)" className={inputClass} data-testid="input-extra-link-1" />
-                      <Input {...form1.register("extraLink2")} placeholder="Extra link 2" className={inputClass} data-testid="input-extra-link-2" />
-                      <Input {...form1.register("extraLink3")} placeholder="Extra link 3" className={inputClass} data-testid="input-extra-link-3" />
-                    </div>
-                  </div>
 
                   <FormField label="Playing History & Achievements (Optional)" error={form1.formState.errors.notes?.message}>
                     <textarea

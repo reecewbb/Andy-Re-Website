@@ -1,6 +1,8 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { MapPin, Car, Train, Clock } from "lucide-react";
+import { MapPin, Car, Train, Clock, ExternalLink } from "lucide-react";
+import tuBlanchardstownImg from "@assets/TUBlanchardstown_1772064267097.png";
+import corduffImg from "@assets/CorduffSportsCentre_1772064267097.jpg";
 
 const locations = [
   {
@@ -15,19 +17,20 @@ const locations = [
       "Sports science and conditioning suite",
       "Changing facilities and medical room",
       "Classroom and presentation facilities",
-      "Campus café and social areas",
+      "Campus caf\u00E9 and social areas",
     ],
     transport: [
       { icon: <Car className="w-4 h-4" />, mode: "By Car", detail: "Accessible via N3/M50 interchange. On-campus parking available." },
       { icon: <Train className="w-4 h-4" />, mode: "By Bus", detail: "Routes 39, 39A, 70, 70A all serve Blanchardstown campus." },
       { icon: <Clock className="w-4 h-4" />, mode: "Journey Times", detail: "15 min from Dublin city centre by car; 30-40 min by public transport." },
     ],
-    imgUrl: "https://images.unsplash.com/photo-1571512599285-9ac4e4b1af59?w=800&q=80",
+    imgUrl: tuBlanchardstownImg,
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=TU+Dublin+Blanchardstown+Campus",
   },
   {
     name: "Corduff Sports Centre",
     shortName: "CSC",
-    address: "Corduff Road, Blanchardstown, Dublin 15",
+    address: "Corduff Road, Blanchardstown, D15 T861",
     type: "Elite Training & Match Facility",
     desc: "Corduff Sports Centre is our dedicated high-performance training venue. A purpose-built facility with premium pitches and sports infrastructure, Corduff provides the professional match and training environment our players need to develop at the highest level.",
     features: [
@@ -43,7 +46,8 @@ const locations = [
       { icon: <Train className="w-4 h-4" />, mode: "By Bus", detail: "Local bus routes serve the Corduff area from Blanchardstown town centre." },
       { icon: <Clock className="w-4 h-4" />, mode: "Journey Times", detail: "2-minute drive or 10-minute walk from TU Blanchardstown." },
     ],
-    imgUrl: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&q=80",
+    imgUrl: corduffImg,
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Corduff+Sports+Centre+Blanchardstown+Dublin",
   },
 ];
 
@@ -116,16 +120,22 @@ export default function Locations() {
                 <div className="rounded-md overflow-hidden aspect-video bg-[#1a1e25]">
                   <img src={loc.imgUrl} alt={loc.name} className="w-full h-full object-cover" />
                 </div>
-                {/* Map placeholder */}
-                <div className="mt-4 bg-[#1a1e25] border border-white/10 rounded-md p-8 text-center">
-                  <MapPin className="w-8 h-8 text-[#9A0A0A] mx-auto mb-3" />
-                  <p className="text-[#B9B2A5] text-sm mb-4">Interactive map coming soon</p>
-                  <Button asChild variant="outline" size="sm" className="border-white/20 text-white bg-white/5 text-xs uppercase tracking-widest">
-                    <a href={`https://www.google.com/maps/search/${encodeURIComponent(loc.address)}`} target="_blank" rel="noopener noreferrer">
-                      Open in Google Maps
-                    </a>
-                  </Button>
-                </div>
+                <a
+                  href={loc.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 bg-[#1a1e25] border border-white/10 rounded-md p-6 flex items-center gap-4 hover:border-[#9A0A0A]/40 transition-colors group block"
+                  data-testid={`map-link-${loc.shortName.toLowerCase()}`}
+                >
+                  <div className="w-12 h-12 bg-[#9A0A0A]/20 border border-[#9A0A0A]/30 rounded-md flex items-center justify-center flex-shrink-0">
+                    <MapPin className="w-5 h-5 text-[#9A0A0A]" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-white font-semibold text-sm mb-0.5">View on Google Maps</p>
+                    <p className="text-[#655955] text-xs">{loc.address}</p>
+                  </div>
+                  <ExternalLink className="w-4 h-4 text-[#655955] group-hover:text-[#9A0A0A] transition-colors flex-shrink-0" />
+                </a>
               </div>
             </div>
           </div>

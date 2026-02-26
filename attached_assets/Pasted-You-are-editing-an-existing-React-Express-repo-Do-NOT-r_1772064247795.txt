@@ -1,0 +1,118 @@
+You are editing an existing React + Express repo. Do NOT redesign, refactor, or change anything except the exact items below. Keep layout/styling/components the same unless a specific change requires it. Ensure the site still builds, routes work, and application + email + Google Sheets logging still works.
+
+I will attach new images to this prompt; use them exactly as described by filename.
+
+⸻
+
+1) Home Page changes
+	1.	Fix the header text currently showing:
+APPLICATIONS NOW OPEN \U2014 FEB 26, 2026
+	•	Remove the literal “\U” mistake and display a normal dash/em dash (—).
+	•	Fix the date to the correct current messaging (keep the same meaning, just correct formatting and date as needed).
+	2.	In the section “A PROVEN PATHWAY TO ELITE FOOTBALL”, the text below the cards:
+“Now, under Andy Reid Elite Soccer Academy, the programme is entering an exciting new chapter…”
+	•	Make this text bigger and bolder and wrap it in quotes.
+	3.	In the highlight reel section, change the heading to:
+“Previous TY Course Graduates”
+	4.	Change the hero background image behind the main title
+“TRANSITION YEAR FULL-TIME FOOTBALL & EDUCATION COURSE”
+	•	Replace with the attached image file named TitlePagePicture.
+	5.	Any attached pictures not used elsewhere in this prompt should be added into the “SEE US IN ACTION” section on the Home page (keep layout consistent—add as additional images/cards in that section).
+
+⸻
+
+2) Programme page changes
+	1.	Page title: remove “The” so it becomes:
+“Andy Reid TY Programme”
+	2.	“Our Mission” section: ensure all body text under the “Our Mission” heading is the same font size (not the same as heading size, but consistent within the paragraph).
+	3.	“Why Choose Us” section:
+	•	Change “Denis Hyland (UEFA A)” → “Denis Hyland (UEFA Pro)”
+	•	Change the card that currently says 8 months → 9 months
+	•	In the “Academic Integration” bullet point, replace text with exactly:
+“Were n independent school working alongside Tulsa to ensure players fulfil their TY requirements while training at the highest level.”
+	•	Remove the bullet point “Real Pathways” entirely.
+	4.	“WHAT SETS US APART” section → “ELITE COACHING STAFF” card:
+Replace the card text with exactly:
+“Our elite coaching staff hold UEFA Pro licenses. Every session is planned and delivered with professional precision.”
+	5.	Programme page hero background image:
+	•	Set the background/hero image behind the Programme page title to the attached image named ProgrammPageTitleBackground.
+	6.	“WHY CHOOSE US?” section image placeholder:
+	•	Insert attached image ProgrammePageWhyChooseUsTrainingSession into the Training Session image placeholder.
+
+⸻
+
+3) Curriculum page changes
+	1.	In the Litton Lane section/card, set the “Learn more” link (anchor text should remain “Learn more”) to:
+https://littonlanetraining.com/
+
+⸻
+
+4) Coaches page changes
+	1.	Add coach image for Andy Reid:
+	•	Use attached image named AndyReidCoaching in Andy Reid section.
+	2.	Add a basic placeholder image for Denis Hyland:
+	•	Use a simple stock/placeholder “football on a pitch” image (no need to be fancy).
+	•	If no local image exists, add a basic static image asset into the repo and reference it.
+
+⸻
+
+5) Locations page changes
+	1.	Replace embedded/interactive maps with clickable cards/links:
+	•	In “TU BLANCHARDSTOWN” section: remove the interactive map embed and replace with a clickable card/link that opens Google Maps for the location.
+	•	In “CORDUFF SPORTS CENTRE” section: same change (clickable card/link opens Google Maps).
+	•	Keep styling consistent with existing cards.
+	2.	Replace location images:
+	•	Put attached image TUBlanchardstown into the TU Blanchardstown image placeholder.
+	•	Put attached image CorduffSportsCentre into the Corduff Sports Centre image placeholder.
+	3.	In “CORDUFF SPORTS CENTRE” section:
+	•	Change “Dublin 15” to: “D15 T861”
+
+⸻
+
+6) Testimonials page changes
+	1.	“FROM THE PLAYERS” section:
+	•	In “Killian Phillips” testimonial card, insert attached image KillianPhillips.
+	•	In “Aidomo Emakhu” testimonial card, insert attached image AidomoEmakhu.
+	2.	“FROM THE PARENTS” section:
+	•	Remove the picture/image areas from both parent testimonial cards entirely (no images), keeping all text and layout otherwise the same.
+
+⸻
+
+7) Application process changes (frontend + backend + emails + Sheets)
+
+Frontend (Apply flow)
+	1.	In the “Player Details” step/section remove:
+	•	“HIGHLIGHT VIDEO LINK”
+	•	all additional link inputs (extraLink1/2/3)
+	2.	Ensure the form still submits successfully and required validation matches the new form.
+
+Backend + Emails (Express server)
+	1.	Update the /api/apply backend to match the new form data:
+	•	Remove required validation for highlightVideo and extra links.
+	•	Update the admin application email template to NOT include highlightVideo or extra links.
+	•	Update the applicant confirmation email template accordingly (reflect new structure).
+	2.	Ensure email sending via Resend still works exactly as before (no changes other than fields removed).
+
+Google Sheets logging
+	1.	Update the data appended to Google Sheets so it matches the updated application process:
+	•	Remove highlightVideo and extra links from the appended row.
+	•	Keep the Sheets logging functional; I will update the sheet headers/columns manually if needed.
+	•	Just make sure the code writes the fields that still exist, in a consistent order.
+
+⸻
+
+8) General / Global UI changes
+	1.	Replace favicon and all “AR” badge images throughout the site:
+	•	Use the attached image named AndyReidBadge.
+	•	This includes the browser favicon and any “AR” logo/badge shown in the UI.
+	2.	Do not change other branding, only swap those assets.
+
+⸻
+
+9) Final checks (must do)
+	•	Do not change anything else beyond these items.
+	•	Ensure build passes and site runs.
+	•	Ensure removed/changed fields don’t break /api/apply.
+	•	Ensure Resend emails still send correctly.
+	•	Ensure Google Sheets row logging still appends successfully.
+	•	Ensure all updated images are correctly referenced and load in production.

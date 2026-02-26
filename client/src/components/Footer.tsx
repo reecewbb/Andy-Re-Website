@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { MapPin, Mail } from "lucide-react";
+import badgeImg from "@assets/AndyReidBadge_1772064267097.png";
 
 export default function Footer() {
   return (
@@ -8,9 +9,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-[#9A0A0A] flex items-center justify-center flex-shrink-0">
-                <span className="font-heading text-white text-lg leading-none">AR</span>
-              </div>
+              <img src={badgeImg} alt="AR Elite Soccer Academy" className="w-10 h-10 rounded-full object-cover flex-shrink-0" style={{ objectPosition: "center 30%" }} />
               <div>
                 <div className="font-heading text-white text-lg leading-none tracking-wide">ANDY REID</div>
                 <div className="text-[#655955] text-[10px] uppercase tracking-widest leading-none">Elite Soccer Academy</div>

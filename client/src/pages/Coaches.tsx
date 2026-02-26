@@ -1,6 +1,8 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Award, Shield, Trophy } from "lucide-react";
+import andyReidImg from "@assets/AndyReidCoaching_1772065939274.png";
+import denisHylandImg from "@assets/DenisHylandCoaching_1772065939274.jpg";
 
 export default function Coaches() {
   return (
@@ -28,7 +30,7 @@ export default function Coaches() {
             <div className="relative">
               <div className="bg-[#1a1e25] border border-white/10 rounded-md overflow-hidden aspect-[4/5]">
                 <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80"
+                  src={andyReidImg}
                   alt="Andy Reid"
                   className="w-full h-full object-cover object-top"
                 />
@@ -76,9 +78,9 @@ export default function Coaches() {
             <div className="lg:order-2 relative">
               <div className="bg-[#1a1e25] border border-white/10 rounded-md overflow-hidden aspect-[4/5]">
                 <img
-                  src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600&q=80"
+                  src={denisHylandImg}
                   alt="Denis Hyland"
-                  className="w-full h-full object-cover object-top"
+                  className="w-full h-full object-cover object-center"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0e1014]/80 via-transparent to-transparent" />
               </div>

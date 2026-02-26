@@ -12,12 +12,6 @@ function escapeHtml(str: unknown): string {
     .replace(/'/g, "&#39;");
 }
 
-function safeUrl(str: unknown): string {
-  const s = String(str ?? "").trim();
-  if (/^https?:\/\//i.test(s)) return escapeHtml(s);
-  return "#";
-}
-
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
 function rateLimit(ip: string, limit = 5, windowMs = 15 * 60 * 1000): boolean {
@@ -101,7 +95,7 @@ export async function registerRoutes(
 
       const required = [
         "playerName", "dob", "gender", "school",
-        "county", "club", "position", "highlightVideo",
+        "county", "club", "position",
         "parentName", "parentEmail", "parentPhone",
       ];
       for (const field of required) {
@@ -118,7 +112,6 @@ export async function registerRoutes(
       console.log("=== NEW APPLICATION RECEIVED ===");
       console.log(`Player: ${body.playerName} | DOB: ${body.dob} | Club: ${body.club}`);
       console.log(`Parent: ${body.parentName} | Email: ${parentEmail} | Phone: ${body.parentPhone}`);
-      console.log(`Video: ${body.highlightVideo}`);
       console.log("================================");
 
       const submittedAt = new Date().toLocaleString("en-IE");
@@ -134,10 +127,6 @@ export async function registerRoutes(
           club: body.club,
           position: body.position,
           level: body.level,
-          highlightVideo: body.highlightVideo,
-          extraLink1: body.extraLink1,
-          extraLink2: body.extraLink2,
-          extraLink3: body.extraLink3,
           notes: body.notes,
           parentName: body.parentName,
           parentEmail: parentEmail,
@@ -149,7 +138,6 @@ export async function registerRoutes(
         console.log("[sheets] appended application row");
       } catch (err) {
         console.error("[sheets] FAILED to append row:", err);
-        // Important: don't block the application if Sheets fails
       }
 
       const resendKey = process.env.RESEND_API_KEY;
@@ -180,14 +168,10 @@ export async function registerRoutes(
               ].map(([k, v]) => `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; width: 40%; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">${k}</td><td style="padding: 8px; background: #1a1e25; color: #E2E2E1;">${v}</td></tr>`).join("")}
             </table>
 
-            <h2 style="color: #9A0A0A; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px;">Football Profile</h2>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
-              <tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; width: 40%; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Highlight Video</td><td style="padding: 8px; background: #1a1e25; color: #E2E2E1;"><a href="${safeUrl(body.highlightVideo)}" style="color: #9A0A0A;">${escapeHtml(body.highlightVideo)}</a></td></tr>
-              ${body.extraLink1 ? `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Extra Link 1</td><td style="padding: 8px; background: #1a1e25;"><a href="${safeUrl(body.extraLink1)}" style="color: #9A0A0A;">${escapeHtml(body.extraLink1)}</a></td></tr>` : ""}
-              ${body.extraLink2 ? `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Extra Link 2</td><td style="padding: 8px; background: #1a1e25;"><a href="${safeUrl(body.extraLink2)}" style="color: #9A0A0A;">${escapeHtml(body.extraLink2)}</a></td></tr>` : ""}
-              ${body.extraLink3 ? `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Extra Link 3</td><td style="padding: 8px; background: #1a1e25;"><a href="${safeUrl(body.extraLink3)}" style="color: #9A0A0A;">${escapeHtml(body.extraLink3)}</a></td></tr>` : ""}
-              ${body.notes ? `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Notes</td><td style="padding: 8px; background: #1a1e25; color: #E2E2E1;">${escapeHtml(body.notes)}</td></tr>` : ""}
-            </table>
+            ${body.notes ? `
+            <h2 style="color: #9A0A0A; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px;">Playing History & Achievements</h2>
+            <div style="background: #1a1e25; padding: 12px; margin-bottom: 24px; color: #E2E2E1; font-size: 14px;">${escapeHtml(body.notes)}</div>
+            ` : ""}
 
             <h2 style="color: #9A0A0A; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px;">Parent / Guardian</h2>
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
@@ -216,8 +200,8 @@ export async function registerRoutes(
             <div style="background: #1a1e25; border: 1px solid #333; border-radius: 6px; padding: 20px; margin: 30px 0;">
               <h3 style="color: #9A0A0A; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">What Happens Next?</h3>
               <ol style="color: #B9B2A5; padding-left: 20px; line-height: 1.8;">
-                <li>Our team reviews your application and highlight video</li>
-                <li>Shortlisted players are invited to a trial session</li>
+                <li>Our team reviews your application</li>
+                <li>Shortlisted players are invited to an Assessment Day</li>
                 <li>Successful applicants receive a formal offer</li>
               </ol>
             </div>

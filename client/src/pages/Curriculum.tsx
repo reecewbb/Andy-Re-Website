@@ -142,7 +142,7 @@ export default function Curriculum() {
                     Litton Lane supports the programme's education pillar, delivering personal training learning and certification throughout the year. Their involvement ensures every player graduates with recognised qualifications alongside their football development.
                   </p>
                   <a
-                    href="https://littonlane.ie"
+                    href="https://littonlanetraining.com/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-[#9A0A0A] text-xs uppercase tracking-wider font-semibold mt-5"
