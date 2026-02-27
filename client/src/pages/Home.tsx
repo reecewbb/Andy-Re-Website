@@ -8,6 +8,8 @@ import corduffSCHall from "@assets/CorduffSC-Sports-Hall_1772064267097.jpg";
 import img0299 from "@assets/IMG_0299_1772064267097.jpeg";
 import img0315 from "@assets/IMG_0315_1772064267097.jpeg";
 import img0327 from "@assets/IMG_0327_1772064267097.jpeg";
+import irlPhoto2 from "@assets/16.11.25_IRL_MU21_MD-2_v_Andorra_Photo-2_1772196393925.jpg";
+import irlPhoto101 from "@assets/17.11.25_IRL_MU21_MD-1_v_Andorra_Photo-101_1772196393925.jpg";
 import { useState } from "react";
 import {
   Accordion,
@@ -60,7 +62,7 @@ const pillars = [
 
 const setsApart = [
   { title: "Proven Foundation", desc: "Our head of football has 20+ years producing elite players for domestic and international football" },
-  { title: "Elite Coaching", desc: "Led by UEFA Pro & UEFA A licensed coaches with professional playing experience" },
+  { title: "Elite Coaching", desc: "All sessions are led by UEFA Pro and A License coaches." },
   { title: "Pro Environment", desc: "Train at TU Blanchardstown & Corduff Sports Centre in professional facilities" },
   { title: "Top-Level Exposure", desc: "Premier League & international club visits, trials and scouting opportunities" },
   { title: "Complete Development", desc: "Balancing football excellence with academic achievement and personal growth" },
@@ -295,7 +297,7 @@ export default function Home() {
               A PROVEN PATHWAY<br />TO ELITE FOOTBALL
             </h2>
             <p className="text-white/70 text-sm max-w-3xl mx-auto leading-relaxed">
-              Our programme is built on a long-standing track record of developing players to the highest levels of the game. Under the leadership of original founder and Head Coach Denis Hyland, it has consistently delivered outstanding progression outcomes both nationally and internationally
+              Our programme is built on a long-standing track record of developing players to the highest levels of the game. Under the leadership of original founder and Head of Coaching Denis Hyland, it has consistently delivered outstanding progression outcomes both nationally and internationally
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -340,7 +342,8 @@ export default function Home() {
               { src: img0299, alt: "Academy session" },
               { src: img0315, alt: "Training in progress" },
               { src: img0327, alt: "Players on the pitch" },
-              { src: "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=500&q=80", alt: "Stadium" },
+              { src: irlPhoto2, alt: "Ireland U21 training session" },
+              { src: irlPhoto101, alt: "Coaching on the training ground" },
             ].map((item, i) => (
               <div key={i} className={`relative bg-[#1a1e25] rounded-md overflow-hidden ${i === 0 ? "col-span-2 row-span-2" : ""}`} style={{ aspectRatio: i === 0 ? "1" : "1" }}>
                 <img src={item.src} alt={item.alt} className="w-full h-full object-cover" style={{ minHeight: i === 0 ? "300px" : "140px" }} />

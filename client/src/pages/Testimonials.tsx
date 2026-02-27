@@ -35,7 +35,7 @@ const parentTestimonials = [
     quote: "Denis's TY programme was one of the best decisions we made for our son. From the very beginning, he stepped into a professional and supportive environment built on high standards. We saw tremendous progress in his football ability, along with real growth in his self-belief, discipline, and game awareness. The programme has been instrumental in preparing him for the next steps in both his football and educational journey.",
     name: "Fran Sheridan",
     role: "Parent",
-    child: "Ryan Sheridan \u2014 St Patrick's Athletic FC",
+    child: "Ryan Sheridan \u2014 St Patrick's Athletic FC & Rep. of Ireland u17 International",
     initials: "FS",
   },
 ];

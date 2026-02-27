@@ -59,9 +59,9 @@ export default function Programme() {
               </h2>
               <div className="space-y-6">
                 {[
-                  { title: "UEFA-Licensed Head Coaches", desc: "Andy Reid (UEFA Pro) and Denis Hyland (UEFA Pro) bring professional playing and coaching experience to every session." },
-                  { title: "Full-Time Programme", desc: "This is not an after-school club. Players train morning and afternoon, five days a week, in a true full-time professional environment." },
-                  { title: "Academic Integration", desc: "Were n independent school working alongside Tulsa to ensure players fulfil their TY requirements while training at the highest level." },
+                  { title: "UEFA-Licensed Head Coaches", desc: "Andy Reid (UEFA PRO) and Denis Hyland (UEFA PRO) bring professional playing and coaching experience to this elite program." },
+                  { title: "Full-Time Programme", desc: "Players train 5 days a week in a full-time professional environment." },
+                  { title: "Academic Integration", desc: "We're an Independent school working alongside Tulsa to ensure players fulfill their TY requirements while training at the hight level." },
                   { title: "Small Group Sizes", desc: "We keep squad numbers deliberately small to ensure every player receives individual attention and detailed coaching feedback." },
                 ].map((item, i) => (
                   <div key={i} className="flex gap-4">

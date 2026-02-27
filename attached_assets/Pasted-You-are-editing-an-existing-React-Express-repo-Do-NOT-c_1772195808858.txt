@@ -1,0 +1,70 @@
+You are editing an existing React + Express repo. Do NOT change anything except the exact items listed below. Keep styling/layout/components the same unless a change requires updating text or swapping images. Ensure the site still builds and all pages/routes still work.
+
+Global instruction
+	•	Update text exactly as requested.
+	•	Replace/remove only the specific phrases mentioned.
+	•	I will attach new pictures—use them in the specified testimonial cards/sections.
+	•	Do not modify any other copy, design, spacing, or components.
+
+⸻
+
+1) Home Page (scroll sections)
+
+A) “What sets us apart” section
+	•	In the Elite Coaching card/area:
+	•	Change/ensure the description reads:
+“All sessions are led by UEFA Pro and A License coaches.”
+	•	Remove the phrase/line: “Professional playing experience” (if it appears anywhere in that card).
+
+B) “A PROVEN PATHWAY TO ELITE FOOTBALL” section
+	•	In the quote/statement text under this section, update the wording so it includes:
+“Under the leadership of original founder and Head of Coaching Denis Hyland”
+(Replace the current “original founder and Head Coach…” or similar wording with this exact phrase.)
+
+C) “LEARN FROM THE BEST” section (Home page)
+	•	In the “ON THE TRAINING GROUND” text area:
+	•	Remove references like: “Our coaches in action with Ireland U21s squad…” (and similar mentions).
+	•	Keep the section structure the same—just remove that specific text so it no longer appears.
+
+⸻
+
+2) Programme Page
+
+A) “WHY CHOOSE US?” section
+
+1) UEFA LICENSED HEAD COACHES block/card
+	•	Remove the wording: “to every session” (or any sentence containing that phrase).
+	•	Replace the main text with exactly:
+“Andy Reid (UEFA PRO) and Denis Hyland (UEFA PRO) bring professional playing and coaching experience to this elite program.”
+
+2) Full Time Programme block/card
+	•	Ensure the text reads:
+“Players train 5 days a week in a full-time professional environment.”
+
+3) Academic Integration block/card
+	•	Replace the Academic Integration text with exactly:
+“We’re an Independent school working alongside Tulsa to ensure players fulfill their TY requirements while training at the hight level.”
+(Keep spelling exactly as provided, including “hight” if that is what the client wants.)
+
+⸻
+
+3) Testimonials Page (add pictures)
+
+Add images to these testimonial cards:
+
+A) “FROM THE PARENTS” (or parent testimonials area)
+	•	Add pictures for:
+	1.	“Luca and Killian Cailloce - UCD AFC”
+	2.	“Ryan Sheridan St Pat & Rep of Ireland U17s International”
+
+Use the attached images that match those names (I will attach and name them clearly).
+Do not add images to any other parent testimonial cards unless requested.
+
+⸻
+
+4) Additional notes / validation
+	•	Do not change any other copy across the site.
+	•	After updates:
+	•	Ensure the relevant sections still render correctly on mobile/desktop.
+	•	Ensure no broken layouts from text length changes.
+	•	Ensure the testimonials images render in the correct cards.
