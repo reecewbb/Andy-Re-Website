@@ -2,6 +2,8 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { Resend } from "resend";
 import { appendApplicationRow } from "./googleSheets";
+import { appendSummerClinicRow } from "./googleSheetsSummerClinics";
+import { randomUUID } from "crypto";
 
 function escapeHtml(str: unknown): string {
   return String(str ?? "")
@@ -27,6 +29,21 @@ function rateLimit(ip: string, limit = 5, windowMs = 15 * 60 * 1000): boolean {
 }
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const CLINIC_KEYS = ["hartstown", "portmarnock"] as const;
+type ClinicKey = typeof CLINIC_KEYS[number];
+
+function normalizeClinic(input: unknown): ClinicKey | null {
+  const v = String(input ?? "").trim().toLowerCase();
+  return (CLINIC_KEYS as readonly string[]).includes(v) ? (v as ClinicKey) : null;
+}
+
+function makeRegistrationId(): string {
+  // Short, friendly ID; unique enough for this scope
+  // Example: SC-2026-2f3a9c
+  const short = randomUUID().split("-")[0];
+  return `SC-2026-${short}`;
+}
 
 function resolveFromEmail(): string {
   const configured = process.env.APPLICATION_EMAIL_FROM;
@@ -238,6 +255,246 @@ export async function registerRoutes(
       return res.status(200).json({ ok: true, message: "Application submitted successfully" });
     } catch (err: any) {
       console.error("Application error:", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  app.post("/api/summer-clinics/register", async (req: Request, res: Response) => {
+    try {
+      const ip =
+        (req.headers["x-forwarded-for"] as string)?.split(",")[0].trim() ||
+        req.socket.remoteAddress ||
+        "unknown";
+
+      if (rateLimit(ip)) {
+        return res.status(429).json({ error: "Too many requests. Please try again later." });
+      }
+
+      const body = req.body ?? {};
+
+      // Honeypot
+      if (body.honeypot && String(body.honeypot).trim().length > 0) {
+        return res.status(200).json({ ok: true });
+      }
+
+      const clinic = normalizeClinic(body.clinic);
+      if (!clinic) {
+        return res.status(400).json({ error: "Invalid clinic selection." });
+      }
+
+      // Required fields for Summer Clinics
+      const required = [
+        "playerName",
+        "dob",
+        "gender",
+        "county",
+        "club",
+        "position",
+        "levelLeague",
+        "emergencyName",
+        "emergencyPhone",
+        "parentName",
+        "parentEmail",
+        "parentPhone",
+        "agreeTerms",
+      ];
+
+      for (const field of required) {
+        const val = body[field];
+        if (field === "agreeTerms") {
+          if (val !== true) {
+            return res.status(400).json({ error: "You must agree to the Terms & Conditions to continue." });
+          }
+        } else {
+          if (!val || String(val).trim() === "") {
+            return res.status(400).json({ error: `Missing required field: ${field}` });
+          }
+        }
+      }
+
+      const parentEmail = String(body.parentEmail).trim().replace(/[\r\n]/g, "");
+      if (!EMAIL_REGEX.test(parentEmail)) {
+        return res.status(400).json({ error: "Invalid parent/guardian email address." });
+      }
+
+      const registrationId = makeRegistrationId();
+      const timestamp = new Date().toLocaleString("en-IE");
+
+      // Save to Google Sheets (Payment pending for now)
+      try {
+        await appendSummerClinicRow({
+          timestamp,
+          registrationId,
+          clinic,
+          playerName: String(body.playerName).trim(),
+          dob: String(body.dob).trim(),
+          gender: String(body.gender).trim(),
+          county: String(body.county).trim(),
+          club: String(body.club).trim(),
+          position: String(body.position).trim(),
+          levelLeague: String(body.levelLeague).trim(),
+          medicalInfo: String(body.medicalInfo ?? "").trim(),
+          emergencyName: String(body.emergencyName).trim(),
+          emergencyPhone: String(body.emergencyPhone).trim(),
+          parentName: String(body.parentName).trim(),
+          parentEmail,
+          parentPhone: String(body.parentPhone).trim(),
+          termsAccepted: true,
+          paymentStatus: "Pending",
+          notes: "",
+          ip,
+        });
+        console.log("[sheets] appended summer clinic row");
+      } catch (err) {
+        console.error("[sheets] FAILED to append summer clinic row:", err);
+        // don't block registration if sheets fails
+      }
+
+      // Email via Resend
+      const resendKey = process.env.RESEND_API_KEY;
+      if (resendKey) {
+        const resend = new Resend(resendKey);
+        const adminEmail = process.env.APPLICATION_EMAIL_TO || "admissions@andyreidelitesocceracademy.ie";
+        const fromEmail = resolveFromEmail();
+
+        const clinicTitle =
+          clinic === "hartstown" ? "Hartstown / Huntstown FC" : "Portmarnock FC";
+
+        const clinicDates =
+          clinic === "hartstown"
+            ? "July 7th, 8th & 9th (10:00–14:00)"
+            : "July 14th, 15th & 16th (10:00–14:00)";
+
+        const adminHtml = `
+          <div style="font-family: Arial, sans-serif; max-width: 720px; margin: 0 auto; background:#111316; color:#E2E2E1; padding:32px; border-radius:10px;">
+            <div style="background:#9A0A0A; padding:16px; border-radius:8px; margin-bottom:22px;">
+              <h1 style="margin:0; color:white; font-size:20px; letter-spacing:2px;">SUMMER CLINIC REGISTRATION (PENDING)</h1>
+            </div>
+
+            <p style="margin:0 0 14px 0; color:#B9B2A5;">Registration ID: <strong style="color:white;">${escapeHtml(registrationId)}</strong></p>
+            <p style="margin:0 0 14px 0; color:#B9B2A5;">Payment Status: <strong style="color:white;">Pending</strong></p>
+
+            <h2 style="color:#9A0A0A; font-size:13px; letter-spacing:2px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:8px;">Clinic</h2>
+            <p style="margin:10px 0 20px 0; color:#E2E2E1;">
+              <strong>${escapeHtml(clinicTitle)}</strong><br/>
+              ${escapeHtml(clinicDates)}<br/>
+              Price: €150 (payment pending)
+            </p>
+
+            <h2 style="color:#9A0A0A; font-size:13px; letter-spacing:2px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:8px;">Player</h2>
+            <table style="width:100%; border-collapse:collapse; margin:12px 0 20px 0;">
+              ${[
+                ["Full Name", body.playerName],
+                ["DOB", body.dob],
+                ["Gender", body.gender],
+                ["County", body.county],
+                ["Club", body.club],
+                ["Position", body.position],
+                ["Level/League", body.levelLeague],
+              ]
+                .map(
+                  ([k, v]) =>
+                    `<tr><td style="padding:8px; background:#1a1e25; color:#B9B2A5; width:40%; font-size:12px; text-transform:uppercase; letter-spacing:1px;">${k}</td><td style="padding:8px; background:#1a1e25; color:#E2E2E1;">${escapeHtml(v)}</td></tr>`
+                )
+                .join("")}
+            </table>
+
+            <h2 style="color:#9A0A0A; font-size:13px; letter-spacing:2px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:8px;">Medical (optional)</h2>
+            <div style="background:#1a1e25; padding:12px; border-radius:6px; margin:12px 0 20px 0;">
+              <div style="color:#E2E2E1;">${escapeHtml(body.medicalInfo) || "—"}</div>
+            </div>
+
+            <h2 style="color:#9A0A0A; font-size:13px; letter-spacing:2px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:8px;">Emergency Contact</h2>
+            <table style="width:100%; border-collapse:collapse; margin:12px 0 20px 0;">
+              ${[
+                ["Name", body.emergencyName],
+                ["Phone", body.emergencyPhone],
+              ]
+                .map(
+                  ([k, v]) =>
+                    `<tr><td style="padding:8px; background:#1a1e25; color:#B9B2A5; width:40%; font-size:12px; text-transform:uppercase; letter-spacing:1px;">${k}</td><td style="padding:8px; background:#1a1e25; color:#E2E2E1;">${escapeHtml(v)}</td></tr>`
+                )
+                .join("")}
+            </table>
+
+            <h2 style="color:#9A0A0A; font-size:13px; letter-spacing:2px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:8px;">Parent / Guardian</h2>
+            <table style="width:100%; border-collapse:collapse; margin:12px 0 20px 0;">
+              ${[
+                ["Name", body.parentName],
+                ["Email", parentEmail],
+                ["Phone", body.parentPhone],
+              ]
+                .map(
+                  ([k, v]) =>
+                    `<tr><td style="padding:8px; background:#1a1e25; color:#B9B2A5; width:40%; font-size:12px; text-transform:uppercase; letter-spacing:1px;">${k}</td><td style="padding:8px; background:#1a1e25; color:#E2E2E1;">${escapeHtml(v)}</td></tr>`
+                )
+                .join("")}
+            </table>
+
+            <p style="color:#655955; font-size:12px; text-align:center; margin-top:18px;">Submitted on ${escapeHtml(timestamp)}</p>
+          </div>
+        `;
+
+        const parentHtml = `
+          <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; background:#111316; color:#E2E2E1; padding:32px; border-radius:10px;">
+            <div style="background:#9A0A0A; padding:16px; border-radius:8px; margin-bottom:22px; text-align:center;">
+              <h1 style="margin:0; color:white; font-size:20px; letter-spacing:2px;">REGISTRATION RECEIVED</h1>
+            </div>
+
+            <p style="color:#B9B2A5;">Dear ${escapeHtml(body.parentName)},</p>
+            <p style="color:#B9B2A5;">
+              Thank you — we’ve received your registration for <strong style="color:white;">${escapeHtml(body.playerName)}</strong>.
+            </p>
+
+            <div style="background:#1a1e25; border:1px solid #333; border-radius:8px; padding:16px; margin:18px 0;">
+              <p style="margin:0 0 10px 0; color:#E2E2E1;"><strong>Clinic:</strong> ${escapeHtml(clinicTitle)}</p>
+              <p style="margin:0 0 10px 0; color:#E2E2E1;"><strong>Schedule:</strong> ${escapeHtml(clinicDates)}</p>
+              <p style="margin:0; color:#E2E2E1;"><strong>Price:</strong> €150</p>
+            </div>
+
+            <p style="color:#B9B2A5;">
+              <strong style="color:white;">Payment is required to confirm your place.</strong>
+              We will provide the payment step shortly.
+            </p>
+
+            <p style="color:#B9B2A5;">
+              You can view the Terms &amp; Conditions here:
+              <a href="https://andyreidelitesocceracademy.ie/summer-clinics/terms" style="color:#9A0A0A;">Terms &amp; Conditions</a>
+            </p>
+
+            <p style="color:#655955; font-size:12px; margin-top:24px;">
+              Andy Reid Elite Soccer Academy
+            </p>
+          </div>
+        `;
+
+        await Promise.allSettled([
+          sendEmail(resend, "summer clinic admin notification", {
+            from: fromEmail,
+            to: adminEmail,
+            replyTo: parentEmail,
+            subject: `Summer Clinic Registration (PENDING) — ${clinicTitle} — ${String(body.playerName).replace(/[\r\n]/g, " ")}`,
+            html: adminHtml,
+          }),
+          sendEmail(resend, "summer clinic parent confirmation", {
+            from: fromEmail,
+            to: parentEmail,
+            replyTo: adminEmail,
+            subject: "Registration Received — Andy Reid Elite Summer Clinics",
+            html: parentHtml,
+          }),
+        ]);
+      } else {
+        console.warn("[email] RESEND_API_KEY not set — summer clinic emails not sent.");
+      }
+
+      return res.status(200).json({
+        ok: true,
+        registrationId,
+        redirectUrl: `/summer-clinics/payment?rid=${encodeURIComponent(registrationId)}`,
+      });
+    } catch (err: any) {
+      console.error("Summer clinic registration error:", err);
       return res.status(500).json({ error: "Internal server error" });
     }
   });

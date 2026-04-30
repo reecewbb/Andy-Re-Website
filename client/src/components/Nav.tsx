@@ -11,6 +11,7 @@ const navLinks = [
   { label: "Coaches", href: "/coaches" },
   { label: "Locations", href: "/locations" },
   { label: "Testimonials", href: "/testimonials" },
+  { label: "Summer Clinics", href: "/summer-clinics" },
   { label: "FAQ", href: "/faq" },
 ];
 
