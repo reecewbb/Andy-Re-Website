@@ -1,3 +1,4 @@
+// server/googleSheetsSummerClinics.ts
 import { google } from "googleapis";
 
 export type SummerClinicRow = {
@@ -48,45 +49,51 @@ export async function appendSummerClinicRow(row: SummerClinicRow) {
   if (!spreadsheetId) throw new Error("Missing GOOGLE_SHEETS_ID");
 
   // New tab you created:
-  const tab = process.env.GOOGLE_SHEETS_SUMMER_TAB || "SummerClinics";
+  const tab = (process.env.GOOGLE_SHEETS_SUMMER_TAB || "SummerClinics").trim();
 
   const sheets = getSheetsClient();
+
+  // IMPORTANT: Quote sheet/tab name for A1 notation (avoids hidden chars / spaces issues)
+  // Also escape any single quotes inside the name by doubling them.
+  const safeTab = `'${tab.replace(/'/g, "''")}'`;
 
   // Must match header order in your SummerClinics tab:
   // timestamp, registrationId, clinic, playerName, dob, gender, county, club, position, levelLeague,
   // medicalInfo, emergencyName, emergencyPhone, parentName, parentEmail, parentPhone,
   // termsAccepted, paymentStatus, notes, ip
-  const values = [[
-    row.timestamp,
-    row.registrationId,
-    row.clinic,
+  const values = [
+    [
+      row.timestamp,
+      row.registrationId,
+      row.clinic,
 
-    row.playerName,
-    row.dob,
-    row.gender,
-    row.county,
-    row.club,
-    row.position,
-    row.levelLeague,
+      row.playerName,
+      row.dob,
+      row.gender,
+      row.county,
+      row.club,
+      row.position,
+      row.levelLeague,
 
-    row.medicalInfo ?? "",
+      row.medicalInfo ?? "",
 
-    row.emergencyName,
-    row.emergencyPhone,
+      row.emergencyName,
+      row.emergencyPhone,
 
-    row.parentName,
-    row.parentEmail,
-    row.parentPhone,
+      row.parentName,
+      row.parentEmail,
+      row.parentPhone,
 
-    row.termsAccepted ? "TRUE" : "FALSE",
-    row.paymentStatus,
-    row.notes ?? "",
-    row.ip ?? "",
-  ]];
+      row.termsAccepted ? "TRUE" : "FALSE",
+      row.paymentStatus,
+      row.notes ?? "",
+      row.ip ?? "",
+    ],
+  ];
 
   await sheets.spreadsheets.values.append({
     spreadsheetId,
-    range: `${tab}!A:Z`,
+    range: `${safeTab}!A:Z`,
     valueInputOption: "USER_ENTERED",
     insertDataOption: "INSERT_ROWS",
     requestBody: { values },
