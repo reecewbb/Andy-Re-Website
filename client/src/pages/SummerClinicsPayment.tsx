@@ -49,7 +49,10 @@ export default function SummerClinicsPayment() {
         body: JSON.stringify({ registrationId: rid }),
       });
 
-      const data = await res.json().catch(() => null);
+      const text = await res.text().catch(() => "");
+      const data = (() => {
+        try { return text ? JSON.parse(text) : null; } catch { return null; }
+      })();
 
       if (!res.ok) {
         setPayError(data?.error || "Could not start payment. Please try again.");

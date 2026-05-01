@@ -1,5 +1,5 @@
 import type { Express, Request, Response } from "express";
-import { createServer, type Server } from "http";
+import { type Server } from "http";
 import { Resend } from "resend";
 import { appendApplicationRow } from "./googleSheets";
 import { appendSummerClinicRow } from "./googleSheetsSummerClinics";
@@ -36,15 +36,13 @@ function rateLimit(ip: string, limit = 5, windowMs = 15 * 60 * 1000): boolean {
 function getStripeClient(): Stripe {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) throw new Error("Missing STRIPE_SECRET_KEY");
-
-  // Pin Stripe API version for stability.
   return new Stripe(key);
 }
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const CLINIC_KEYS = ["hartstown", "portmarnock"] as const;
-type ClinicKey = typeof CLINIC_KEYS[number];
+type ClinicKey = (typeof CLINIC_KEYS)[number];
 
 function normalizeClinic(input: unknown): ClinicKey | null {
   const v = String(input ?? "").trim().toLowerCase();
@@ -52,8 +50,6 @@ function normalizeClinic(input: unknown): ClinicKey | null {
 }
 
 function makeRegistrationId(): string {
-  // Short, friendly ID; unique enough for this scope
-  // Example: SC-2026-2f3a9c
   const short = randomUUID().split("-")[0];
   return `SC-2026-${short}`;
 }
@@ -67,7 +63,7 @@ function resolveFromEmail(): string {
     if (!domain.includes("andyreidelitesocceracademy.ie")) {
       console.warn(
         `[email] WARNING: APPLICATION_EMAIL_FROM domain "${domain}" may not be verified for sending. ` +
-        `Falling back to root domain. Set APPLICATION_EMAIL_FROM explicitly to suppress this warning.`
+          `Falling back to root domain. Set APPLICATION_EMAIL_FROM explicitly to suppress this warning.`,
       );
       return "Andy Reid Elite Soccer Academy <no-reply@andyreidelitesocceracademy.ie>";
     }
@@ -79,7 +75,7 @@ function resolveFromEmail(): string {
 async function sendEmail(
   resend: Resend,
   label: string,
-  payload: { from: string; to: string; replyTo?: string; subject: string; html: string }
+  payload: { from: string; to: string; replyTo?: string; subject: string; html: string },
 ): Promise<void> {
   console.log(`[email] Attempting to send ${label} to: ${payload.to}`);
   const { data, error } = await resend.emails.send(payload);
@@ -90,11 +86,7 @@ async function sendEmail(
   }
 }
 
-export async function registerRoutes(
-  httpServer: Server,
-  app: Express
-): Promise<Server> {
-
+export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
   app.get("/api/email-health", (_req: Request, res: Response) => {
     const from = resolveFromEmail();
     const to = process.env.APPLICATION_EMAIL_TO || "admissions@andyreidelitesocceracademy.ie";
@@ -107,11 +99,15 @@ export async function registerRoutes(
     });
   });
 
+  // =========================
+  // APPLY (existing)
+  // =========================
   app.post("/api/apply", async (req: Request, res: Response) => {
     try {
-      const ip = (req.headers["x-forwarded-for"] as string)?.split(",")[0].trim()
-        || req.socket.remoteAddress
-        || "unknown";
+      const ip =
+        (req.headers["x-forwarded-for"] as string)?.split(",")[0].trim() ||
+        req.socket.remoteAddress ||
+        "unknown";
 
       if (rateLimit(ip)) {
         return res.status(429).json({ error: "Too many requests. Please try again later." });
@@ -124,9 +120,16 @@ export async function registerRoutes(
       }
 
       const required = [
-        "playerName", "dob", "gender", "school",
-        "county", "club", "position",
-        "parentName", "parentEmail", "parentPhone",
+        "playerName",
+        "dob",
+        "gender",
+        "school",
+        "county",
+        "club",
+        "position",
+        "parentName",
+        "parentEmail",
+        "parentPhone",
       ];
       for (const field of required) {
         if (!body[field] || String(body[field]).trim() === "") {
@@ -138,11 +141,6 @@ export async function registerRoutes(
       if (!EMAIL_REGEX.test(parentEmail)) {
         return res.status(400).json({ error: "Invalid parent email address." });
       }
-
-      console.log("=== NEW APPLICATION RECEIVED ===");
-      console.log(`Player: ${body.playerName} | DOB: ${body.dob} | Club: ${body.club}`);
-      console.log(`Parent: ${body.parentName} | Email: ${parentEmail} | Phone: ${body.parentPhone}`);
-      console.log("================================");
 
       const submittedAt = new Date().toLocaleString("en-IE");
 
@@ -172,11 +170,9 @@ export async function registerRoutes(
 
       const resendKey = process.env.RESEND_API_KEY;
       if (resendKey) {
-        const adminEmail = process.env.APPLICATION_EMAIL_TO || "admissions@andyreidelitesocceracademy.ie";
+        const adminEmail =
+          process.env.APPLICATION_EMAIL_TO || "admissions@andyreidelitesocceracademy.ie";
         const fromEmail = resolveFromEmail();
-
-        console.log(`[email] From: ${fromEmail}`);
-        console.log(`[email] Admin recipient: ${adminEmail}`);
 
         const htmlBody = `
           <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; background: #111316; color: #E2E2E1; padding: 40px; border-radius: 8px;">
@@ -195,7 +191,12 @@ export async function registerRoutes(
                 ["Current Club", escapeHtml(body.club)],
                 ["Position(s)", escapeHtml(body.position)],
                 ["Level / League", escapeHtml(body.level) || "—"],
-              ].map(([k, v]) => `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; width: 40%; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">${k}</td><td style="padding: 8px; background: #1a1e25; color: #E2E2E1;">${v}</td></tr>`).join("")}
+              ]
+                .map(
+                  ([k, v]) =>
+                    `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; width: 40%; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">${k}</td><td style="padding: 8px; background: #1a1e25; color: #E2E2E1;">${v}</td></tr>`,
+                )
+                .join("")}
             </table>
 
             ${body.notes ? `
@@ -211,7 +212,12 @@ export async function registerRoutes(
                 ["Phone", escapeHtml(body.parentPhone)],
                 ["How Did They Hear?", escapeHtml(body.hearAboutUs) || "—"],
                 ["Message", escapeHtml(body.message) || "—"],
-              ].map(([k, v]) => `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; width: 40%; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">${k}</td><td style="padding: 8px; background: #1a1e25; color: #E2E2E1;">${v}</td></tr>`).join("")}
+              ]
+                .map(
+                  ([k, v]) =>
+                    `<tr><td style="padding: 8px; background: #1a1e25; color: #B9B2A5; width: 40%; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">${k}</td><td style="padding: 8px; background: #1a1e25; color: #E2E2E1;">${v}</td></tr>`,
+                )
+                .join("")}
             </table>
 
             <p style="color: #655955; font-size: 12px; text-align: center; margin-top: 30px;">Submitted via andyreidelitesocceracademy.ie on ${new Date().toLocaleString("en-IE")}</p>
@@ -226,20 +232,8 @@ export async function registerRoutes(
             <p style="color: #B9B2A5;">Dear ${escapeHtml(body.parentName)},</p>
             <p style="color: #B9B2A5;">Thank you for submitting an application for <strong style="color: white;">${escapeHtml(body.playerName)}</strong> to the Andy Reid Elite Soccer Academy Transition Year Programme.</p>
             <p style="color: #B9B2A5;">We've received your application and our coaching team will review it carefully. You can expect to hear from us within <strong style="color: white;">5-7 working days</strong>.</p>
-
-            <div style="background: #1a1e25; border: 1px solid #333; border-radius: 6px; padding: 20px; margin: 30px 0;">
-              <h3 style="color: #9A0A0A; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-top: 0;">What Happens Next?</h3>
-              <ol style="color: #B9B2A5; padding-left: 20px; line-height: 1.8;">
-                <li>Our team reviews your application</li>
-                <li>Shortlisted players are invited to an Assessment Day</li>
-                <li>Successful applicants receive a formal offer</li>
-              </ol>
-            </div>
-
             <p style="color: #B9B2A5;">If you have any questions, please don't hesitate to get in touch:</p>
             <a href="mailto:admissions@andyreidelitesocceracademy.ie" style="color: #9A0A0A;">admissions@andyreidelitesocceracademy.ie</a>
-
-            <p style="color: #655955; font-size: 12px; margin-top: 30px;">Andy Reid Elite Soccer Academy | TU Blanchardstown &amp; Corduff Sports Centre, Dublin 15</p>
           </div>
         `;
 
@@ -272,6 +266,9 @@ export async function registerRoutes(
     }
   });
 
+  // =========================
+  // LOOKUP CHECKOUT SESSION
+  // =========================
   app.get("/api/summer-clinics/checkout-session", async (req: Request, res: Response) => {
     try {
       const sessionId = String(req.query.session_id ?? "").trim();
@@ -280,7 +277,6 @@ export async function registerRoutes(
       const stripe = getStripeClient();
       const session = await stripe.checkout.sessions.retrieve(sessionId);
 
-      // ✅ Only treat it as success if Stripe says paid
       if (session.payment_status !== "paid") {
         return res.status(400).json({
           error: "Payment not completed.",
@@ -310,6 +306,9 @@ export async function registerRoutes(
     }
   });
 
+  // =========================
+  // SUMMER CLINICS REGISTER
+  // =========================
   app.post("/api/summer-clinics/register", async (req: Request, res: Response) => {
     try {
       const ip =
@@ -323,7 +322,6 @@ export async function registerRoutes(
 
       const body = req.body ?? {};
 
-      // Honeypot
       if (body.honeypot && String(body.honeypot).trim().length > 0) {
         return res.status(200).json({ ok: true });
       }
@@ -333,7 +331,6 @@ export async function registerRoutes(
         return res.status(400).json({ error: "Invalid clinic selection." });
       }
 
-      // Required fields for Summer Clinics
       const required = [
         "playerName",
         "dob",
@@ -354,7 +351,9 @@ export async function registerRoutes(
         const val = body[field];
         if (field === "agreeTerms") {
           if (val !== true) {
-            return res.status(400).json({ error: "You must agree to the Terms & Conditions to continue." });
+            return res
+              .status(400)
+              .json({ error: "You must agree to the Terms & Conditions to continue." });
           }
         } else {
           if (!val || String(val).trim() === "") {
@@ -371,7 +370,6 @@ export async function registerRoutes(
       const registrationId = makeRegistrationId();
       const timestamp = new Date().toLocaleString("en-IE");
 
-      // Save to Google Sheets (Payment pending for now)
       try {
         await appendSummerClinicRow({
           timestamp,
@@ -398,14 +396,14 @@ export async function registerRoutes(
         console.log("[sheets] appended summer clinic row");
       } catch (err) {
         console.error("[sheets] FAILED to append summer clinic row:", err);
-        // don't block registration if sheets fails
       }
 
-      // Email via Resend
+      // Emails (pending)
       const resendKey = process.env.RESEND_API_KEY;
       if (resendKey) {
         const resend = new Resend(resendKey);
-        const adminEmail = process.env.APPLICATION_EMAIL_TO || "admissions@andyreidelitesocceracademy.ie";
+        const adminEmail =
+          process.env.APPLICATION_EMAIL_TO || "admissions@andyreidelitesocceracademy.ie";
         const fromEmail = resolveFromEmail();
 
         const clinicTitle =
@@ -421,67 +419,13 @@ export async function registerRoutes(
             <div style="background:#9A0A0A; padding:16px; border-radius:8px; margin-bottom:22px;">
               <h1 style="margin:0; color:white; font-size:20px; letter-spacing:2px;">SUMMER CLINIC REGISTRATION (PENDING)</h1>
             </div>
-
             <p style="margin:0 0 14px 0; color:#B9B2A5;">Registration ID: <strong style="color:white;">${escapeHtml(registrationId)}</strong></p>
             <p style="margin:0 0 14px 0; color:#B9B2A5;">Payment Status: <strong style="color:white;">Pending</strong></p>
-
-            <h2 style="color:#9A0A0A; font-size:13px; letter-spacing:2px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:8px;">Clinic</h2>
             <p style="margin:10px 0 20px 0; color:#E2E2E1;">
               <strong>${escapeHtml(clinicTitle)}</strong><br/>
               ${escapeHtml(clinicDates)}<br/>
               Price: €150 (payment pending)
             </p>
-
-            <h2 style="color:#9A0A0A; font-size:13px; letter-spacing:2px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:8px;">Player</h2>
-            <table style="width:100%; border-collapse:collapse; margin:12px 0 20px 0;">
-              ${[
-                ["Full Name", body.playerName],
-                ["DOB", body.dob],
-                ["Gender", body.gender],
-                ["County", body.county],
-                ["Club", body.club],
-                ["Position", body.position],
-                ["Level/League", body.levelLeague],
-              ]
-                .map(
-                  ([k, v]) =>
-                    `<tr><td style="padding:8px; background:#1a1e25; color:#B9B2A5; width:40%; font-size:12px; text-transform:uppercase; letter-spacing:1px;">${k}</td><td style="padding:8px; background:#1a1e25; color:#E2E2E1;">${escapeHtml(v)}</td></tr>`
-                )
-                .join("")}
-            </table>
-
-            <h2 style="color:#9A0A0A; font-size:13px; letter-spacing:2px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:8px;">Medical (optional)</h2>
-            <div style="background:#1a1e25; padding:12px; border-radius:6px; margin:12px 0 20px 0;">
-              <div style="color:#E2E2E1;">${escapeHtml(body.medicalInfo) || "—"}</div>
-            </div>
-
-            <h2 style="color:#9A0A0A; font-size:13px; letter-spacing:2px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:8px;">Emergency Contact</h2>
-            <table style="width:100%; border-collapse:collapse; margin:12px 0 20px 0;">
-              ${[
-                ["Name", body.emergencyName],
-                ["Phone", body.emergencyPhone],
-              ]
-                .map(
-                  ([k, v]) =>
-                    `<tr><td style="padding:8px; background:#1a1e25; color:#B9B2A5; width:40%; font-size:12px; text-transform:uppercase; letter-spacing:1px;">${k}</td><td style="padding:8px; background:#1a1e25; color:#E2E2E1;">${escapeHtml(v)}</td></tr>`
-                )
-                .join("")}
-            </table>
-
-            <h2 style="color:#9A0A0A; font-size:13px; letter-spacing:2px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:8px;">Parent / Guardian</h2>
-            <table style="width:100%; border-collapse:collapse; margin:12px 0 20px 0;">
-              ${[
-                ["Name", body.parentName],
-                ["Email", parentEmail],
-                ["Phone", body.parentPhone],
-              ]
-                .map(
-                  ([k, v]) =>
-                    `<tr><td style="padding:8px; background:#1a1e25; color:#B9B2A5; width:40%; font-size:12px; text-transform:uppercase; letter-spacing:1px;">${k}</td><td style="padding:8px; background:#1a1e25; color:#E2E2E1;">${escapeHtml(v)}</td></tr>`
-                )
-                .join("")}
-            </table>
-
             <p style="color:#655955; font-size:12px; text-align:center; margin-top:18px;">Submitted on ${escapeHtml(timestamp)}</p>
           </div>
         `;
@@ -491,30 +435,12 @@ export async function registerRoutes(
             <div style="background:#9A0A0A; padding:16px; border-radius:8px; margin-bottom:22px; text-align:center;">
               <h1 style="margin:0; color:white; font-size:20px; letter-spacing:2px;">REGISTRATION RECEIVED</h1>
             </div>
-
             <p style="color:#B9B2A5;">Dear ${escapeHtml(body.parentName)},</p>
             <p style="color:#B9B2A5;">
               Thank you — we’ve received your registration for <strong style="color:white;">${escapeHtml(body.playerName)}</strong>.
             </p>
-
-            <div style="background:#1a1e25; border:1px solid #333; border-radius:8px; padding:16px; margin:18px 0;">
-              <p style="margin:0 0 10px 0; color:#E2E2E1;"><strong>Clinic:</strong> ${escapeHtml(clinicTitle)}</p>
-              <p style="margin:0 0 10px 0; color:#E2E2E1;"><strong>Schedule:</strong> ${escapeHtml(clinicDates)}</p>
-              <p style="margin:0; color:#E2E2E1;"><strong>Price:</strong> €150</p>
-            </div>
-
             <p style="color:#B9B2A5;">
               <strong style="color:white;">Payment is required to confirm your place.</strong>
-              Please complete payment using the payment link shown after submitting the form.
-            </p>
-
-            <p style="color:#B9B2A5;">
-              You can view the Terms &amp; Conditions here:
-              <a href="https://andyreidelitesocceracademy.ie/summer-clinics/terms" style="color:#9A0A0A;">Terms &amp; Conditions</a>
-            </p>
-
-            <p style="color:#655955; font-size:12px; margin-top:24px;">
-              Andy Reid Elite Soccer Academy
             </p>
           </div>
         `;
@@ -550,6 +476,9 @@ export async function registerRoutes(
     }
   });
 
+  // =========================
+  // CREATE CHECKOUT SESSION
+  // =========================
   app.post("/api/summer-clinics/create-checkout-session", async (req: Request, res: Response) => {
     try {
       const registrationId = String(req.body?.registrationId ?? "").trim();
@@ -557,19 +486,25 @@ export async function registerRoutes(
         return res.status(400).json({ error: "Missing registrationId" });
       }
 
-      const priceId = process.env.STRIPE_PRICE_ID;
-      if (!priceId) return res.status(500).json({ error: "Missing STRIPE_PRICE_ID" });
+      const priceId = String(process.env.STRIPE_PRICE_ID ?? "").trim();
+      if (!priceId) {
+        return res.status(500).json({ error: "Missing STRIPE_PRICE_ID" });
+      }
+      // Guardrail: Stripe Checkout expects a Price ID (price_...), NOT a Product ID (prod_...)
+      if (!priceId.startsWith("price_")) {
+        return res.status(500).json({
+          error:
+            `STRIPE_PRICE_ID must be a Stripe Price ID that starts with "price_". ` +
+            `You currently have "${priceId}". (If you copied a Product ID, it starts with "prod_".)`,
+        });
+      }
 
-      const successUrl = process.env.STRIPE_SUCCESS_URL;
-      const cancelUrl = process.env.STRIPE_CANCEL_URL;
+      const successUrl = String(process.env.STRIPE_SUCCESS_URL ?? "").trim();
+      const cancelUrl = String(process.env.STRIPE_CANCEL_URL ?? "").trim();
       if (!successUrl || !cancelUrl) {
         return res.status(500).json({ error: "Missing STRIPE_SUCCESS_URL / STRIPE_CANCEL_URL" });
       }
 
-      // Look up the registration in Sheets so we can:
-      // - ensure the rid exists
-      // - get parent email for receipt/customer_email
-      // - prevent tampering
       const found = await findSummerClinicRegistration(registrationId);
       if (!found) {
         return res.status(404).json({ error: "Registration not found. Please re-submit the form." });
@@ -577,10 +512,9 @@ export async function registerRoutes(
 
       const stripe = getStripeClient();
 
-      const cancelWithRid =
-        cancelUrl.includes("?")
-          ? `${cancelUrl}&rid=${encodeURIComponent(registrationId)}`
-          : `${cancelUrl}?rid=${encodeURIComponent(registrationId)}`;
+      const cancelWithRid = cancelUrl.includes("?")
+        ? `${cancelUrl}&rid=${encodeURIComponent(registrationId)}`
+        : `${cancelUrl}?rid=${encodeURIComponent(registrationId)}`;
 
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
@@ -589,17 +523,28 @@ export async function registerRoutes(
         cancel_url: cancelWithRid,
         customer_email: found.parentEmail || undefined,
         client_reference_id: registrationId,
-        metadata: { registrationId, clinic: found.clinic, playerName: found.playerName },
+        metadata: {
+          registrationId,
+          clinic: found.clinic,
+          playerName: found.playerName,
+        },
+        // ensures payment_intent.payment_failed has the rid in metadata too
         payment_intent_data: { metadata: { registrationId } },
       });
 
       return res.json({ ok: true, url: session.url });
-    } catch (err) {
+    } catch (err: any) {
+      // Bubble up Stripe error message to help you debug instantly
+      const stripeMsg =
+        err?.raw?.message || err?.message || "Internal server error";
       console.error("Create checkout session error:", err);
-      return res.status(500).json({ error: "Internal server error" });
+      return res.status(500).json({ error: stripeMsg });
     }
   });
 
+  // =========================
+  // STRIPE WEBHOOK
+  // =========================
   app.post("/api/stripe/webhook", async (req: Request, res: Response) => {
     const sig = req.headers["stripe-signature"];
     if (!sig || typeof sig !== "string") {
@@ -621,7 +566,6 @@ export async function registerRoutes(
     }
 
     try {
-      // We care about checkout completion
       if (event.type === "checkout.session.completed") {
         const session = event.data.object as Stripe.Checkout.Session;
 
@@ -640,7 +584,9 @@ export async function registerRoutes(
             notes,
           });
 
-          console.log(`[stripe] checkout.session.completed paid. rid=${registrationId} updated=${updated}`);
+          console.log(
+            `[stripe] checkout.session.completed paid. rid=${registrationId} updated=${updated}`,
+          );
 
           if (!updated) {
             console.warn(
@@ -649,44 +595,44 @@ export async function registerRoutes(
             return res.json({ received: true });
           }
 
-          // Send "PAID" emails (admin + parent)
           const resendKey = process.env.RESEND_API_KEY;
           if (!resendKey) {
             console.warn("[email] RESEND_API_KEY not set — paid emails not sent.");
             return res.json({ received: true });
           }
 
-          // Look up registration details so we can email the correct parent
           const found = await findSummerClinicRegistration(registrationId);
           if (!found) {
-            console.warn(`[stripe] Paid but could not find registration in Sheets. rid=${registrationId}`);
+            console.warn(
+              `[stripe] Paid but could not find registration in Sheets. rid=${registrationId}`,
+            );
             return res.json({ received: true });
           }
 
           const resend = new Resend(resendKey);
-          const adminEmail = process.env.APPLICATION_EMAIL_TO || "admissions@andyreidelitesocceracademy.ie";
+          const adminEmail =
+            process.env.APPLICATION_EMAIL_TO || "admissions@andyreidelitesocceracademy.ie";
           const fromEmail = resolveFromEmail();
 
           const clinicTitle =
-            found.clinic === "hartstown" ? "Hartstown / Huntstown FC" :
-            found.clinic === "portmarnock" ? "Portmarnock FC" :
-            found.clinic;
+            found.clinic === "hartstown"
+              ? "Hartstown / Huntstown FC"
+              : found.clinic === "portmarnock"
+                ? "Portmarnock FC"
+                : found.clinic;
 
           const paidAdminHtml = `
             <div style="font-family: Arial, sans-serif; max-width: 720px; margin: 0 auto; background:#111316; color:#E2E2E1; padding:32px; border-radius:10px;">
               <div style="background:#9A0A0A; padding:16px; border-radius:8px; margin-bottom:22px;">
                 <h1 style="margin:0; color:white; font-size:20px; letter-spacing:2px;">SUMMER CLINIC PAYMENT CONFIRMED</h1>
               </div>
-
               <p style="margin:0 0 14px 0; color:#B9B2A5;">Registration ID: <strong style="color:white;">${escapeHtml(registrationId)}</strong></p>
               <p style="margin:0 0 14px 0; color:#B9B2A5;">Payment Status: <strong style="color:white;">Paid</strong></p>
-
               <div style="background:#1a1e25; border:1px solid #333; border-radius:8px; padding:16px; margin:18px 0;">
                 <p style="margin:0 0 10px 0; color:#E2E2E1;"><strong>Clinic:</strong> ${escapeHtml(clinicTitle)}</p>
                 <p style="margin:0 0 10px 0; color:#E2E2E1;"><strong>Player:</strong> ${escapeHtml(found.playerName)}</p>
                 <p style="margin:0; color:#E2E2E1;"><strong>Parent email:</strong> ${escapeHtml(found.parentEmail)}</p>
               </div>
-
               <p style="color:#655955; font-size:12px; text-align:center; margin-top:18px;">
                 Stripe session: ${escapeHtml(session.id)}
               </p>
@@ -698,24 +644,17 @@ export async function registerRoutes(
               <div style="background:#9A0A0A; padding:16px; border-radius:8px; margin-bottom:22px; text-align:center;">
                 <h1 style="margin:0; color:white; font-size:20px; letter-spacing:2px;">PAYMENT CONFIRMED</h1>
               </div>
-
               <p style="color:#B9B2A5;">
                 Thank you — your payment has been received and your place is now confirmed.
               </p>
-
               <div style="background:#1a1e25; border:1px solid #333; border-radius:8px; padding:16px; margin:18px 0;">
                 <p style="margin:0 0 10px 0; color:#E2E2E1;"><strong>Registration ID:</strong> ${escapeHtml(registrationId)}</p>
                 <p style="margin:0 0 10px 0; color:#E2E2E1;"><strong>Clinic:</strong> ${escapeHtml(clinicTitle)}</p>
                 <p style="margin:0; color:#E2E2E1;"><strong>Player:</strong> ${escapeHtml(found.playerName)}</p>
               </div>
-
               <p style="color:#B9B2A5;">
                 Terms &amp; Conditions:
                 <a href="https://andyreidelitesocceracademy.ie/summer-clinics/terms" style="color:#9A0A0A;">View Terms</a>
-              </p>
-
-              <p style="color:#655955; font-size:12px; margin-top:24px;">
-                Andy Reid Elite Soccer Academy
               </p>
             </div>
           `;
@@ -737,7 +676,9 @@ export async function registerRoutes(
             }),
           ]);
         } else {
-          console.log(`[stripe] checkout.session.completed not paid or missing rid. paid=${paid} rid=${registrationId}`);
+          console.log(
+            `[stripe] checkout.session.completed not paid or missing rid. paid=${paid} rid=${registrationId}`,
+          );
         }
       }
 
