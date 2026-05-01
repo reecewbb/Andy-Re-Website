@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import flyerImg from "@assets/summer_clinics_flyer.png";
 
 type ClinicKey = "hartstown" | "portmarnock";
 
@@ -20,7 +21,7 @@ const CLINICS: Array<{
     time: "10:00 – 14:00",
     ageGroup: "Players born 2010 to 2014 — boys & girls",
     price: "€150",
-    capacityNote: "Limited spaces (max 60 places)",
+    capacityNote: "Limited spaces (max 50 places)",
   },
   {
     key: "portmarnock",
@@ -29,7 +30,7 @@ const CLINICS: Array<{
     time: "10:00 – 14:00",
     ageGroup: "Players born 2010 to 2014 — boys & girls",
     price: "€150",
-    capacityNote: "Limited spaces (max 60 places)",
+    capacityNote: "Limited spaces (max 50 places)",
   },
 ];
 
@@ -51,6 +52,38 @@ export default function SummerClinics() {
         </div>
       </section>
 
+      {/* Flyer / brochure preview */}
+      <section className="pb-10">
+        <div className="mx-auto w-full max-w-6xl px-4">
+          <div className="rounded-2xl border border-white/10 bg-black/20 p-6 md:p-8">
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="text-sm tracking-[0.25em] text-[#B9B2A5]">BROCHURE</p>
+                <h2 className="mt-2 text-xl font-bold tracking-wide md:text-2xl">
+                  Summer Clinics Flyer
+                </h2>
+                <p className="mt-2 text-sm text-[#B9B2A5]">
+                  Tap to view full size.
+                </p>
+              </div>
+            </div>
+
+            <a
+              href={flyerImg}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-6 block overflow-hidden rounded-xl border border-white/10 bg-black/30"
+            >
+              <img
+                src={flyerImg}
+                alt="Andy Reid Elite Summer Clinics flyer"
+                className="w-full h-auto object-contain"
+              />
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Accordion dropdown blocks */}
       <section className="pb-20">
         <div className="mx-auto w-full max-w-6xl px-4">
@@ -59,7 +92,8 @@ export default function SummerClinics() {
               Select your clinic
             </h2>
             <p className="mt-2 text-sm text-[#B9B2A5]">
-              Both clinics are €150. Players born 2010–2014 (boys & girls). Limited spaces.
+              Clinics are for <span className="text-[#E2E2E1] font-semibold">Elite Players</span> born in{" "}
+              <span className="text-[#E2E2E1] font-semibold">2010 - 2014</span> (Boys &amp; Girls).
             </p>
 
             <div className="mt-6">
@@ -75,9 +109,6 @@ export default function SummerClinics() {
                         <div>
                           <div className="text-lg font-bold">{c.title}</div>
                           <div className="text-sm text-[#B9B2A5]">{c.dates} • {c.time}</div>
-                        </div>
-                        <div className="text-sm font-semibold text-[#E2E2E1]">
-                          {c.price}
                         </div>
                       </div>
                     </AccordionTrigger>

@@ -112,7 +112,7 @@ export default function SummerClinicsTerms() {
               <p>These Terms & Conditions are governed by Irish law. The Academy may update these Terms & Conditions where necessary and will communicate updates.</p>
             </div>
 
-            <div className="rounded-xl border border-white/10 bg-black/30 p-4">
+            <div>
               <h3 className="font-semibold text-white">15. Acceptance</h3>
               <p className="text-[#B9B2A5]">
                 By completing an online booking and selecting the Terms & Conditions checkbox, you confirm that you have read, understood, and agree to these Terms & Conditions.

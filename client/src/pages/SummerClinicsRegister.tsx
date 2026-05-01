@@ -246,7 +246,7 @@ export default function SummerClinicsRegister() {
 
                 {clinicDetails && (
                   <div className="mt-3 text-sm text-[#B9B2A5]">
-                    {clinicDetails.dates} • {clinicDetails.time} • €150
+                    {clinicDetails.dates} • {clinicDetails.time}
                   </div>
                 )}
               </div>
@@ -441,7 +441,7 @@ export default function SummerClinicsRegister() {
                 disabled={submitting}
                 className="w-full bg-[#9A0A0A] hover:bg-[#7f0808] py-6 text-base font-semibold"
               >
-                {submitting ? "Submitting..." : "Continue to Payment (€150)"}
+                {submitting ? "Submitting..." : "Continue to Payment"}
               </Button>
 
               <p className="mt-3 text-center text-xs text-[#B9B2A5]">
