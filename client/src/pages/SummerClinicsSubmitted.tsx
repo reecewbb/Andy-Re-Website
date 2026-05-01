@@ -1,4 +1,5 @@
-import { Link } from "wouter";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 
 function getRid(): string | null {
@@ -12,8 +13,78 @@ function getRid(): string | null {
   return null;
 }
 
+function getSessionId(): string | null {
+  const params = new URLSearchParams(window.location.search);
+  const sid = params.get("session_id");
+  if (sid && sid.trim()) return sid.trim();
+  return null;
+}
+
 export default function SummerClinicsSubmitted() {
-  const rid = getRid();
+  const [, navigate] = useLocation();
+
+  const [rid, setRid] = useState<string | null>(() => getRid());
+  const [loading, setLoading] = useState<boolean>(() => !getRid() && Boolean(getSessionId()));
+  const [lookupError, setLookupError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const currentRid = getRid();
+    if (currentRid) return;
+
+    const sessionId = getSessionId();
+    if (!sessionId) return;
+
+    (async () => {
+      try {
+        const res = await fetch(
+          `/api/summer-clinics/checkout-session?session_id=${encodeURIComponent(sessionId)}`
+        );
+        const data = await res.json().catch(() => null);
+
+        if (!res.ok) {
+          setLookupError(data?.error || "Could not verify payment session.");
+          setLoading(false);
+          return;
+        }
+
+        const newRid = String(data?.registrationId || "").trim();
+        if (!newRid) {
+          setLookupError("Could not determine registration ID from Stripe session.");
+          setLoading(false);
+          return;
+        }
+
+        // Store rid + redirect to canonical rid URL
+        sessionStorage.setItem("summerClinicRegistrationId", newRid);
+        setRid(newRid);
+
+        // wouter replace navigation (type cast to avoid TS config differences)
+        navigate(`/summer-clinics/submitted?rid=${encodeURIComponent(newRid)}`, { replace: true } as any);
+      } catch {
+        setLookupError("Network error verifying payment session.");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [navigate]);
+
+  if (loading) {
+    return (
+      <main className="bg-[#111316] text-white">
+        <section className="py-16">
+          <div className="mx-auto w-full max-w-3xl px-4">
+            <div className="rounded-2xl border border-white/10 bg-black/30 p-8">
+              <p className="text-sm tracking-[0.25em] text-[#B9B2A5]">PAYMENT</p>
+              <h1 className="mt-3 text-3xl font-extrabold md:text-4xl">
+                Verifying <span className="text-[#9A0A0A]">payment</span>…
+              </h1>
+              <p className="mt-4 text-[#E2E2E1]">Please wait a moment.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    );
+  }
 
   if (!rid) {
     return (
@@ -25,11 +96,13 @@ export default function SummerClinicsSubmitted() {
                 REGISTRATION NOT CONFIRMED
               </p>
               <h1 className="mt-3 text-3xl font-extrabold md:text-4xl">
-                We couldn’t confirm your <span className="text-[#9A0A0A]">registration</span>
+                We couldn’t confirm your{" "}
+                <span className="text-[#9A0A0A]">registration</span>
               </h1>
               <p className="mt-4 text-[#E2E2E1]">
-                This page should only be shown after a successful form submission.
-                Please return to the registration form and submit again.
+                {lookupError
+                  ? lookupError
+                  : "This page should only be shown after a successful form submission or payment."}
               </p>
 
               <div className="mt-8 flex flex-col gap-3 md:flex-row">
@@ -61,7 +134,8 @@ export default function SummerClinicsSubmitted() {
               REGISTRATION RECEIVED
             </p>
             <h1 className="mt-3 text-3xl font-extrabold md:text-4xl">
-              Thank you — <span className="text-[#9A0A0A]">we’ve received your registration</span>
+              Thank you —{" "}
+              <span className="text-[#9A0A0A]">we’ve received your registration</span>
             </h1>
             <p className="mt-4 text-[#E2E2E1]">
               Please check your email for confirmation. Payment is required to confirm your place.

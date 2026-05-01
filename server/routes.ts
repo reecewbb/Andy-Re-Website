@@ -4,6 +4,11 @@ import { Resend } from "resend";
 import { appendApplicationRow } from "./googleSheets";
 import { appendSummerClinicRow } from "./googleSheetsSummerClinics";
 import { randomUUID } from "crypto";
+import Stripe from "stripe";
+import {
+  findSummerClinicRegistration,
+  updateSummerClinicPaymentStatus,
+} from "./googleSheetsSummerClinics";
 
 function escapeHtml(str: unknown): string {
   return String(str ?? "")
@@ -26,6 +31,14 @@ function rateLimit(ip: string, limit = 5, windowMs = 15 * 60 * 1000): boolean {
   if (entry.count >= limit) return true;
   entry.count++;
   return false;
+}
+
+function getStripeClient(): Stripe {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) throw new Error("Missing STRIPE_SECRET_KEY");
+
+  // Pin Stripe API version for stability.
+  return new Stripe(key);
 }
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -259,6 +272,44 @@ export async function registerRoutes(
     }
   });
 
+  app.get("/api/summer-clinics/checkout-session", async (req: Request, res: Response) => {
+    try {
+      const sessionId = String(req.query.session_id ?? "").trim();
+      if (!sessionId) return res.status(400).json({ error: "Missing session_id" });
+
+      const stripe = getStripeClient();
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+      // ✅ Only treat it as success if Stripe says paid
+      if (session.payment_status !== "paid") {
+        return res.status(400).json({
+          error: "Payment not completed.",
+          payment_status: session.payment_status,
+          status: session.status,
+        });
+      }
+
+      const registrationId =
+        (session.metadata?.registrationId as string | undefined) ||
+        (session.client_reference_id as string | undefined) ||
+        "";
+
+      if (!registrationId) {
+        return res.status(400).json({ error: "Missing registrationId on Stripe session." });
+      }
+
+      return res.json({
+        ok: true,
+        registrationId,
+        payment_status: session.payment_status,
+        status: session.status,
+      });
+    } catch (err) {
+      console.error("checkout-session lookup error:", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
   app.post("/api/summer-clinics/register", async (req: Request, res: Response) => {
     try {
       const ip =
@@ -454,7 +505,7 @@ export async function registerRoutes(
 
             <p style="color:#B9B2A5;">
               <strong style="color:white;">Payment is required to confirm your place.</strong>
-              We will provide the payment step shortly.
+              Please complete payment using the payment link shown after submitting the form.
             </p>
 
             <p style="color:#B9B2A5;">
@@ -496,6 +547,218 @@ export async function registerRoutes(
     } catch (err: any) {
       console.error("Summer clinic registration error:", err);
       return res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  app.post("/api/summer-clinics/create-checkout-session", async (req: Request, res: Response) => {
+    try {
+      const registrationId = String(req.body?.registrationId ?? "").trim();
+      if (!registrationId) {
+        return res.status(400).json({ error: "Missing registrationId" });
+      }
+
+      const priceId = process.env.STRIPE_PRICE_ID;
+      if (!priceId) return res.status(500).json({ error: "Missing STRIPE_PRICE_ID" });
+
+      const successUrl = process.env.STRIPE_SUCCESS_URL;
+      const cancelUrl = process.env.STRIPE_CANCEL_URL;
+      if (!successUrl || !cancelUrl) {
+        return res.status(500).json({ error: "Missing STRIPE_SUCCESS_URL / STRIPE_CANCEL_URL" });
+      }
+
+      // Look up the registration in Sheets so we can:
+      // - ensure the rid exists
+      // - get parent email for receipt/customer_email
+      // - prevent tampering
+      const found = await findSummerClinicRegistration(registrationId);
+      if (!found) {
+        return res.status(404).json({ error: "Registration not found. Please re-submit the form." });
+      }
+
+      const stripe = getStripeClient();
+
+      const cancelWithRid =
+        cancelUrl.includes("?")
+          ? `${cancelUrl}&rid=${encodeURIComponent(registrationId)}`
+          : `${cancelUrl}?rid=${encodeURIComponent(registrationId)}`;
+
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        line_items: [{ price: priceId, quantity: 1 }],
+        success_url: successUrl,
+        cancel_url: cancelWithRid,
+        customer_email: found.parentEmail || undefined,
+        client_reference_id: registrationId,
+        metadata: { registrationId, clinic: found.clinic, playerName: found.playerName },
+        payment_intent_data: { metadata: { registrationId } },
+      });
+
+      return res.json({ ok: true, url: session.url });
+    } catch (err) {
+      console.error("Create checkout session error:", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  app.post("/api/stripe/webhook", async (req: Request, res: Response) => {
+    const sig = req.headers["stripe-signature"];
+    if (!sig || typeof sig !== "string") {
+      return res.status(400).send("Missing stripe-signature");
+    }
+
+    const secret = process.env.STRIPE_WEBHOOK_SECRET;
+    if (!secret) return res.status(500).send("Missing STRIPE_WEBHOOK_SECRET");
+
+    let event: Stripe.Event;
+
+    try {
+      const stripe = getStripeClient();
+      const rawBody = req.body as Buffer; // provided by express.raw() in server/index.ts
+      event = stripe.webhooks.constructEvent(rawBody, sig, secret);
+    } catch (err) {
+      console.error("Webhook signature verification failed:", err);
+      return res.status(400).send("Webhook Error");
+    }
+
+    try {
+      // We care about checkout completion
+      if (event.type === "checkout.session.completed") {
+        const session = event.data.object as Stripe.Checkout.Session;
+
+        const paid = session.payment_status === "paid";
+        const registrationId =
+          (session.metadata?.registrationId as string | undefined) ||
+          (session.client_reference_id as string | undefined) ||
+          "";
+
+        if (paid && registrationId) {
+          const notes = `Paid via Stripe. session=${session.id} payment_intent=${session.payment_intent ?? ""} paid_email_sent=1`;
+
+          const updated = await updateSummerClinicPaymentStatus({
+            registrationId,
+            paymentStatus: "Paid",
+            notes,
+          });
+
+          console.log(`[stripe] checkout.session.completed paid. rid=${registrationId} updated=${updated}`);
+
+          if (!updated) {
+            console.warn(
+              `[stripe] paid but could not update sheet. skipping emails. rid=${registrationId}`,
+            );
+            return res.json({ received: true });
+          }
+
+          // Send "PAID" emails (admin + parent)
+          const resendKey = process.env.RESEND_API_KEY;
+          if (!resendKey) {
+            console.warn("[email] RESEND_API_KEY not set — paid emails not sent.");
+            return res.json({ received: true });
+          }
+
+          // Look up registration details so we can email the correct parent
+          const found = await findSummerClinicRegistration(registrationId);
+          if (!found) {
+            console.warn(`[stripe] Paid but could not find registration in Sheets. rid=${registrationId}`);
+            return res.json({ received: true });
+          }
+
+          const resend = new Resend(resendKey);
+          const adminEmail = process.env.APPLICATION_EMAIL_TO || "admissions@andyreidelitesocceracademy.ie";
+          const fromEmail = resolveFromEmail();
+
+          const clinicTitle =
+            found.clinic === "hartstown" ? "Hartstown / Huntstown FC" :
+            found.clinic === "portmarnock" ? "Portmarnock FC" :
+            found.clinic;
+
+          const paidAdminHtml = `
+            <div style="font-family: Arial, sans-serif; max-width: 720px; margin: 0 auto; background:#111316; color:#E2E2E1; padding:32px; border-radius:10px;">
+              <div style="background:#9A0A0A; padding:16px; border-radius:8px; margin-bottom:22px;">
+                <h1 style="margin:0; color:white; font-size:20px; letter-spacing:2px;">SUMMER CLINIC PAYMENT CONFIRMED</h1>
+              </div>
+
+              <p style="margin:0 0 14px 0; color:#B9B2A5;">Registration ID: <strong style="color:white;">${escapeHtml(registrationId)}</strong></p>
+              <p style="margin:0 0 14px 0; color:#B9B2A5;">Payment Status: <strong style="color:white;">Paid</strong></p>
+
+              <div style="background:#1a1e25; border:1px solid #333; border-radius:8px; padding:16px; margin:18px 0;">
+                <p style="margin:0 0 10px 0; color:#E2E2E1;"><strong>Clinic:</strong> ${escapeHtml(clinicTitle)}</p>
+                <p style="margin:0 0 10px 0; color:#E2E2E1;"><strong>Player:</strong> ${escapeHtml(found.playerName)}</p>
+                <p style="margin:0; color:#E2E2E1;"><strong>Parent email:</strong> ${escapeHtml(found.parentEmail)}</p>
+              </div>
+
+              <p style="color:#655955; font-size:12px; text-align:center; margin-top:18px;">
+                Stripe session: ${escapeHtml(session.id)}
+              </p>
+            </div>
+          `;
+
+          const paidParentHtml = `
+            <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; background:#111316; color:#E2E2E1; padding:32px; border-radius:10px;">
+              <div style="background:#9A0A0A; padding:16px; border-radius:8px; margin-bottom:22px; text-align:center;">
+                <h1 style="margin:0; color:white; font-size:20px; letter-spacing:2px;">PAYMENT CONFIRMED</h1>
+              </div>
+
+              <p style="color:#B9B2A5;">
+                Thank you — your payment has been received and your place is now confirmed.
+              </p>
+
+              <div style="background:#1a1e25; border:1px solid #333; border-radius:8px; padding:16px; margin:18px 0;">
+                <p style="margin:0 0 10px 0; color:#E2E2E1;"><strong>Registration ID:</strong> ${escapeHtml(registrationId)}</p>
+                <p style="margin:0 0 10px 0; color:#E2E2E1;"><strong>Clinic:</strong> ${escapeHtml(clinicTitle)}</p>
+                <p style="margin:0; color:#E2E2E1;"><strong>Player:</strong> ${escapeHtml(found.playerName)}</p>
+              </div>
+
+              <p style="color:#B9B2A5;">
+                Terms &amp; Conditions:
+                <a href="https://andyreidelitesocceracademy.ie/summer-clinics/terms" style="color:#9A0A0A;">View Terms</a>
+              </p>
+
+              <p style="color:#655955; font-size:12px; margin-top:24px;">
+                Andy Reid Elite Soccer Academy
+              </p>
+            </div>
+          `;
+
+          await Promise.allSettled([
+            sendEmail(resend, "summer clinic paid admin confirmation", {
+              from: fromEmail,
+              to: adminEmail,
+              replyTo: found.parentEmail || undefined,
+              subject: `Summer Clinic Registration (PAID) — ${clinicTitle} — ${String(found.playerName).replace(/[\r\n]/g, " ")}`,
+              html: paidAdminHtml,
+            }),
+            sendEmail(resend, "summer clinic paid parent confirmation", {
+              from: fromEmail,
+              to: found.parentEmail,
+              replyTo: adminEmail,
+              subject: "Payment Confirmed — Andy Reid Elite Summer Clinics",
+              html: paidParentHtml,
+            }),
+          ]);
+        } else {
+          console.log(`[stripe] checkout.session.completed not paid or missing rid. paid=${paid} rid=${registrationId}`);
+        }
+      }
+
+      if (event.type === "payment_intent.payment_failed") {
+        const pi = event.data.object as Stripe.PaymentIntent;
+        const registrationId = (pi.metadata?.registrationId as string | undefined) || "";
+
+        if (registrationId) {
+          await updateSummerClinicPaymentStatus({
+            registrationId,
+            paymentStatus: "Failed",
+            notes: `Payment failed. payment_intent=${pi.id}`,
+          });
+          console.log(`[stripe] payment failed. rid=${registrationId}`);
+        }
+      }
+
+      return res.json({ received: true });
+    } catch (err) {
+      console.error("Webhook handler error:", err);
+      return res.status(500).send("Webhook handler failed");
     }
   });
 
