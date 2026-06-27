@@ -41,7 +41,7 @@ function getStripeClient(): Stripe {
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const CLINIC_KEYS = ["hartstown", "portmarnock"] as const;
+const CLINIC_KEYS = ["portmarnock"] as const;
 type ClinicKey = (typeof CLINIC_KEYS)[number];
 
 function normalizeClinic(input: unknown): ClinicKey | null {
@@ -406,13 +406,9 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
           process.env.APPLICATION_EMAIL_TO || "admissions@andyreidelitesocceracademy.ie";
         const fromEmail = resolveFromEmail();
 
-        const clinicTitle =
-          clinic === "hartstown" ? "Hartstown / Huntstown FC" : "Portmarnock FC";
+        const clinicTitle = "Portmarnock FC";
 
-        const clinicDates =
-          clinic === "hartstown"
-            ? "July 7th, 8th & 9th (10:00–14:00)"
-            : "July 14th, 15th & 16th (10:00–14:00)";
+        const clinicDates = "July 14th, 15th & 16th (10:00-14:00)";
 
         const adminHtml = `
           <div style="font-family: Arial, sans-serif; max-width: 720px; margin: 0 auto; background:#111316; color:#E2E2E1; padding:32px; border-radius:10px;">
@@ -615,11 +611,9 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
           const fromEmail = resolveFromEmail();
 
           const clinicTitle =
-            found.clinic === "hartstown"
-              ? "Hartstown / Huntstown FC"
-              : found.clinic === "portmarnock"
-                ? "Portmarnock FC"
-                : found.clinic;
+            found.clinic === "portmarnock"
+              ? "Portmarnock FC"
+              : found.clinic;
 
           const paidAdminHtml = `
             <div style="font-family: Arial, sans-serif; max-width: 720px; margin: 0 auto; background:#111316; color:#E2E2E1; padding:32px; border-radius:10px;">

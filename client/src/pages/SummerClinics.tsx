@@ -3,7 +3,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button";
 import flyerImg from "@assets/summer_clinics_flyer.png";
 
-type ClinicKey = "hartstown" | "portmarnock";
+type ClinicKey = "portmarnock";
 
 const CLINICS: Array<{
   key: ClinicKey;
@@ -14,15 +14,6 @@ const CLINICS: Array<{
   price: string;
   capacityNote: string;
 }> = [
-  {
-    key: "hartstown",
-    title: "Hartstown / Huntstown FC",
-    dates: "July 7th, 8th & 9th",
-    time: "10:00 – 14:00",
-    ageGroup: "Players born 2010 to 2014 — boys & girls",
-    price: "€150",
-    capacityNote: "Limited spaces (max 50 places)",
-  },
   {
     key: "portmarnock",
     title: "Portmarnock FC",

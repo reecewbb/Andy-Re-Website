@@ -15,15 +15,10 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 
-type ClinicKey = "hartstown" | "portmarnock";
+type ClinicKey = "portmarnock";
 
 const CLINICS: Record<ClinicKey, { title: string; dates: string; time: string }> =
   {
-    hartstown: {
-      title: "Hartstown / Huntstown FC",
-      dates: "July 7th, 8th & 9th",
-      time: "10:00 – 14:00",
-    },
     portmarnock: {
       title: "Portmarnock FC",
       dates: "July 14th, 15th & 16th",
@@ -34,7 +29,7 @@ const CLINICS: Record<ClinicKey, { title: string; dates: string; time: string }>
 function getClinicFromQuery(): ClinicKey | "" {
   const params = new URLSearchParams(window.location.search);
   const c = (params.get("clinic") || "").toLowerCase();
-  if (c === "hartstown" || c === "portmarnock") return c;
+  if (c === "portmarnock") return c;
   return "";
 }
 
@@ -236,9 +231,6 @@ export default function SummerClinicsRegister() {
                       <SelectValue placeholder="Choose a clinic" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="hartstown">
-                        Hartstown / Huntstown FC
-                      </SelectItem>
                       <SelectItem value="portmarnock">Portmarnock FC</SelectItem>
                     </SelectContent>
                   </Select>
