@@ -15,10 +15,10 @@ import Locations from "@/pages/Locations";
 import Testimonials from "@/pages/Testimonials";
 import FAQ from "@/pages/FAQ";
 import SummerClinics from "@/pages/SummerClinics";
-import SummerClinicsRegister from "@/pages/SummerClinicsRegister";
+/**import SummerClinicsRegister from "@/pages/SummerClinicsRegister";
 import SummerClinicsTerms from "@/pages/SummerClinicsTerms";
 import SummerClinicsPayment from "@/pages/SummerClinicsPayment";
-import SummerClinicsSubmitted from "@/pages/SummerClinicsSubmitted";
+import SummerClinicsSubmitted from "@/pages/SummerClinicsSubmitted";*/
 import Apply from "@/pages/Apply";
 import ThankYou from "@/pages/ThankYou";
 import Privacy from "@/pages/legal/Privacy";
@@ -39,10 +39,10 @@ function Router() {
       <Route path="/testimonials" component={Testimonials} />
       <Route path="/faq" component={FAQ} />
       <Route path="/summer-clinics" component={SummerClinics} />
-      <Route path="/summer-clinics/register" component={SummerClinicsRegister} />
+      {/**<Route path="/summer-clinics/register" component={SummerClinicsRegister} />
       <Route path="/summer-clinics/terms" component={SummerClinicsTerms} />
       <Route path="/summer-clinics/payment" component={SummerClinicsPayment} />
-      <Route path="/summer-clinics/submitted" component={SummerClinicsSubmitted} />
+      <Route path="/summer-clinics/submitted" component={SummerClinicsSubmitted} /> */}
       <Route path="/apply" component={Apply} />
       <Route path="/thank-you" component={ThankYou} />
       <Route path="/privacy" component={Privacy} />

@@ -1,11 +1,9 @@
-import { Link } from "wouter";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
 import flyerImg from "@assets/summer_clinics_flyer.png";
 
 type ClinicKey = "portmarnock";
 
-const CLINICS: Array<{
+/**const CLINICS: Array<{
   key: ClinicKey;
   title: string;
   dates: string;
@@ -23,7 +21,7 @@ const CLINICS: Array<{
     price: "€150",
     capacityNote: "Limited spaces (max 50 places)",
   },
-];
+];*/
 
 export default function SummerClinics() {
   return (
@@ -34,10 +32,10 @@ export default function SummerClinics() {
           <div className="rounded-2xl border border-white/10 bg-black/30 p-8 md:p-12">
             <p className="text-sm tracking-[0.25em] text-[#B9B2A5]">ELITE SUMMER CLINICS</p>
             <h1 className="mt-3 text-3xl font-extrabold tracking-tight md:text-5xl">
-              Register for our <span className="text-[#9A0A0A]">Elite Summer Clinics</span>
+              Andy Reid <span className="text-[#9A0A0A]">Elite Summer Clinics</span>
             </h1>
             <p className="mt-4 max-w-2xl text-base text-[#E2E2E1] md:text-lg">
-              Choose your location below to register. Places are limited.
+              High-performance summer clinics for elite young players.
             </p>
           </div>
         </div>
@@ -75,8 +73,17 @@ export default function SummerClinics() {
         </div>
       </section>
 
-      {/* Accordion dropdown blocks */}
+      {/* Sold-out notice */}
       <section className="pb-20">
+        <div>
+          <p>2025 SEASON</p>
+          <h2>Summer Clinics — <span>Sold Out</span></h2>
+          <p>Our summer clinics for the 2025 season are now fully booked. Check back next year for upcoming dates and locations.</p>
+          </div>
+      </section>
+
+      {/* Accordion dropdown blocks */}
+      {/**<section className="pb-20">
         <div className="mx-auto w-full max-w-6xl px-4">
           <div className="rounded-2xl border border-white/10 bg-black/20 p-6 md:p-8">
             <h2 className="text-xl font-bold tracking-wide md:text-2xl">
@@ -145,7 +152,8 @@ export default function SummerClinics() {
             </div>
           </div>
         </div>
-      </section>
+      </section>*/}
+
     </main>
   );
 }

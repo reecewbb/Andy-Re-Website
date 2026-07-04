@@ -2,13 +2,13 @@ import type { Express, Request, Response } from "express";
 import { type Server } from "http";
 import { Resend } from "resend";
 import { appendApplicationRow } from "./googleSheets";
-import { appendSummerClinicRow } from "./googleSheetsSummerClinics";
+/*import { appendSummerClinicRow } from "./googleSheetsSummerClinics";*/
 import { randomUUID } from "crypto";
 import Stripe from "stripe";
-import {
+/**import {
   findSummerClinicRegistration,
   updateSummerClinicPaymentStatus,
-} from "./googleSheetsSummerClinics";
+} from "./googleSheetsSummerClinics";*/
 
 function escapeHtml(str: unknown): string {
   return String(str ?? "")
@@ -41,7 +41,7 @@ function getStripeClient(): Stripe {
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const CLINIC_KEYS = ["portmarnock"] as const;
+/**const CLINIC_KEYS = ["portmarnock"] as const;
 type ClinicKey = (typeof CLINIC_KEYS)[number];
 
 function normalizeClinic(input: unknown): ClinicKey | null {
@@ -52,7 +52,7 @@ function normalizeClinic(input: unknown): ClinicKey | null {
 function makeRegistrationId(): string {
   const short = randomUUID().split("-")[0];
   return `SC-2026-${short}`;
-}
+}*/
 
 function resolveFromEmail(): string {
   const configured = process.env.APPLICATION_EMAIL_FROM;
@@ -269,7 +269,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   // =========================
   // LOOKUP CHECKOUT SESSION
   // =========================
-  app.get("/api/summer-clinics/checkout-session", async (req: Request, res: Response) => {
+  /**app.get("/api/summer-clinics/checkout-session", async (req: Request, res: Response) => {
     try {
       const sessionId = String(req.query.session_id ?? "").trim();
       if (!sessionId) return res.status(400).json({ error: "Missing session_id" });
@@ -304,12 +304,12 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       console.error("checkout-session lookup error:", err);
       return res.status(500).json({ error: "Internal server error" });
     }
-  });
+  });*/
 
   // =========================
   // SUMMER CLINICS REGISTER
   // =========================
-  app.post("/api/summer-clinics/register", async (req: Request, res: Response) => {
+  /**app.post("/api/summer-clinics/register", async (req: Request, res: Response) => {
     try {
       const ip =
         (req.headers["x-forwarded-for"] as string)?.split(",")[0].trim() ||
@@ -470,12 +470,12 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       console.error("Summer clinic registration error:", err);
       return res.status(500).json({ error: "Internal server error" });
     }
-  });
+  });*/
 
   // =========================
   // CREATE CHECKOUT SESSION
   // =========================
-  app.post("/api/summer-clinics/create-checkout-session", async (req: Request, res: Response) => {
+  /**app.post("/api/summer-clinics/create-checkout-session", async (req: Request, res: Response) => {
     try {
       const registrationId = String(req.body?.registrationId ?? "").trim();
       if (!registrationId) {
@@ -536,12 +536,12 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       console.error("Create checkout session error:", err);
       return res.status(500).json({ error: stripeMsg });
     }
-  });
+  });*/
 
   // =========================
   // STRIPE WEBHOOK
   // =========================
-  app.post("/api/stripe/webhook", async (req: Request, res: Response) => {
+  /**app.post("/api/stripe/webhook", async (req: Request, res: Response) => {
     const sig = req.headers["stripe-signature"];
     if (!sig || typeof sig !== "string") {
       return res.status(400).send("Missing stripe-signature");
@@ -695,7 +695,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       console.error("Webhook handler error:", err);
       return res.status(500).send("Webhook handler failed");
     }
-  });
+  });*/
 
   return httpServer;
 }
