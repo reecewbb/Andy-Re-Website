@@ -162,7 +162,7 @@ export default function Curriculum() {
           <h2 className="font-heading text-5xl sm:text-6xl text-white uppercase tracking-wide leading-none mb-6">
             READY TO START?
           </h2>
-          <p className="text-white/70 text-lg mb-8">Applications for September 2026 are open. Secure your place today.</p>
+          <p className="text-white/70 text-lg mb-8">Details for the September 2027 intake, including application opening and programme dates, will be announced once confirmed.</p>
           <Button asChild size="lg" className="bg-white text-[#9A0A0A] font-bold text-sm uppercase tracking-widest px-10">
             <Link href="/apply">Apply Now</Link>
           </Button>

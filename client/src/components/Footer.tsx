@@ -69,9 +69,9 @@ export default function Footer() {
               </li>
             </ul>
             <div className="mt-6 p-4 bg-[#9A0A0A]/10 border border-[#9A0A0A]/20 rounded-md">
-              <p className="text-xs text-[#B9B2A5] mb-1 uppercase tracking-wider font-medium">Applications Open</p>
-              <p className="text-white font-semibold text-sm">September 2026 Intake</p>
-              <p className="text-[#655955] text-xs mt-1">Deadline: Rolling admissions</p>
+              <p className="text-xs text-[#B9B2A5] mb-1 uppercase tracking-wider font-medium">Upcoming Intake</p>
+              <p className="text-white font-semibold text-sm">September 2027 Intake</p>
+              <p className="text-[#655955] text-xs mt-1">Application and programme dates to be announced.</p>
             </div>
           </div>
         </div>

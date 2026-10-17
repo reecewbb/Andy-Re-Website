@@ -30,7 +30,7 @@ const faqs = [
     questions: [
       {
         q: "When do applications open?",
-        a: "Applications for the September 2026 intake open on February 26, 2026. We recommend applying as early as possible as places are strictly limited and offered on a rolling basis.",
+        a: "The application opening date for the September 2027 intake will be announced once confirmed. We recommend applying as early as possible once applications open, as places are strictly limited and offered on a rolling basis.",
       },
       {
         q: "What do I need to apply?",
@@ -55,7 +55,7 @@ const faqs = [
       },
       {
         q: "What are the programme dates?",
-        a: "The 2026/27 programme runs from September 3, 2026 to May 28, 2027. Players are expected to be available for all training and match days throughout the programme.",
+        a: "Programme dates for the September 2027 intake will be announced once confirmed. Players are expected to be available for all training and match days throughout the programme.",
       },
       {
         q: "How much does the programme cost?",

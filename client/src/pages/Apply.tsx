@@ -142,7 +142,7 @@ export default function Apply() {
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 50% 50%, #9A0A0A 0%, transparent 60%)" }} />
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-block bg-[#9A0A0A]/20 border border-[#9A0A0A]/30 text-[#9A0A0A] text-xs uppercase tracking-widest px-3 py-1.5 rounded-md mb-6 font-medium">
-            September 2026 Intake
+            September 2027 Intake
           </div>
           <h1 className="font-heading text-5xl sm:text-6xl text-white uppercase tracking-wide leading-none mb-4">
             APPLY NOW
@@ -401,8 +401,8 @@ export default function Apply() {
           <div className="grid grid-cols-3 gap-6 text-center">
             {[
               { label: "Places", value: "Limited" },
-              { label: "Start Date", value: "Sept 3, 2026" },
-              { label: "Applications Open", value: "Feb 26, 2026" },
+              { label: "Programme Dates", value: "To Be Announced" },
+              { label: "Application Opening", value: "To Be Announced" },
             ].map((item, i) => (
               <div key={i}>
                 <div className="font-heading text-2xl text-[#9A0A0A] mb-1">{item.value}</div>

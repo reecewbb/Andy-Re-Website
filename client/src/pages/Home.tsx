@@ -102,7 +102,7 @@ const faqs = [
   },
   {
     q: "What are the programme dates?",
-    a: "The 2026/27 programme runs from September 3, 2026 to May 28, 2027. Applications are open from February 26, 2026.",
+    a: "Programme dates for the September 2027 intake will be announced once confirmed.",
   },
   {
     q: "Where does training take place?",
@@ -478,7 +478,7 @@ export default function Home() {
       <section className="bg-[#9A0A0A] py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-heading text-5xl sm:text-6xl lg:text-7xl text-white uppercase tracking-wide leading-none mb-4">
-            APPLICATIONS FOR<br />SEPTEMBER 2026 NOW OPEN
+            SEPTEMBER 2027 INTAKE<br />DATES TO BE ANNOUNCED
           </h2>
           <p className="text-white/70 text-lg mb-8">Places are limited. Don't miss your chance to train with Ireland's best.</p>
           <div className="flex flex-wrap gap-4 justify-center">

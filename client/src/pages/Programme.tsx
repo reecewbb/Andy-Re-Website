@@ -89,8 +89,8 @@ export default function Programme() {
                 {[
                   { label: "Training Days", value: "5 / Week" },
                   { label: "Programme Length", value: "9 Months" },
-                  { label: "Start Date", value: "Sept 3, 2026" },
-                  { label: "Applications", value: "Open Feb 26" },
+                  { label: "Programme Dates", value: "To Be Announced" },
+                  { label: "Application Opening", value: "To Be Announced" },
                 ].map((item, i) => (
                   <div key={i} className="bg-[#1a1e25] border border-white/10 rounded-md p-5">
                     <div className="font-heading text-2xl text-[#9A0A0A] mb-1">{item.value}</div>
@@ -135,7 +135,7 @@ export default function Programme() {
           <h2 className="font-heading text-5xl sm:text-6xl text-white uppercase tracking-wide leading-none mb-6">
             READY TO APPLY?
           </h2>
-          <p className="text-white/70 text-lg mb-8 max-w-xl mx-auto">Applications for the September 2026 intake are now open. Places are strictly limited.</p>
+          <p className="text-white/70 text-lg mb-8 max-w-xl mx-auto">Details for the September 2027 intake, including application opening and programme dates, will be announced once confirmed. Places are strictly limited.</p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Button asChild size="lg" className="bg-white text-[#9A0A0A] font-bold text-sm uppercase tracking-widest px-10">
               <Link href="/apply">Apply Now</Link>
